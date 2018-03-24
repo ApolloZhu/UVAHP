@@ -13,8 +13,8 @@
 		52D9B2502066C4EF00B4D609 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B24F2066C4EF00B4D609 /* Assets.xcassets */; };
 		52D9B2532066C4EF00B4D609 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B2512066C4EF00B4D609 /* LaunchScreen.storyboard */; };
 		52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D9B25D2066C65A00B4D609 /* Extensions.swift */; };
-		52E7DC982066EC3200BFE2E7 /* SafeTrekManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7DC972066EC3200BFE2E7 /* SafeTrekManager.swift */; };
 		6AFBF2182066DB24003DB256 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AFBF2172066DB24003DB256 /* MapKit.framework */; };
+		6AFBF21B2066EC93003DB256 /* SafeTrekManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFBF21A2066EC91003DB256 /* SafeTrekManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +26,8 @@
 		52D9B2522066C4EF00B4D609 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		52D9B2542066C4EF00B4D609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52D9B25D2066C65A00B4D609 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		52E7DC972066EC3200BFE2E7 /* SafeTrekManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafeTrekManager.swift; sourceTree = "<group>"; };
 		6AFBF2172066DB24003DB256 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		6AFBF21A2066EC91003DB256 /* SafeTrekManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafeTrekManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,18 +92,10 @@
 		52D9B25C2066C5FE00B4D609 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				52E7DC962066EC3200BFE2E7 /* SafeTrek */,
+				6AFBF2192066EC91003DB256 /* SafeTrek */,
 				52D9B25D2066C65A00B4D609 /* Extensions.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		52E7DC962066EC3200BFE2E7 /* SafeTrek */ = {
-			isa = PBXGroup;
-			children = (
-				52E7DC972066EC3200BFE2E7 /* SafeTrekManager.swift */,
-			);
-			path = SafeTrek;
 			sourceTree = "<group>";
 		};
 		6AFBF2162066DB24003DB256 /* Frameworks */ = {
@@ -112,6 +104,14 @@
 				6AFBF2172066DB24003DB256 /* MapKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6AFBF2192066EC91003DB256 /* SafeTrek */ = {
+			isa = PBXGroup;
+			children = (
+				6AFBF21A2066EC91003DB256 /* SafeTrekManager.swift */,
+			);
+			path = SafeTrek;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,7 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E7DC982066EC3200BFE2E7 /* SafeTrekManager.swift in Sources */,
+				6AFBF21B2066EC93003DB256 /* SafeTrekManager.swift in Sources */,
 				52D9B24B2066C4E600B4D609 /* ViewController.swift in Sources */,
 				52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */,
 				52D9B2492066C4E600B4D609 /* AppDelegate.swift in Sources */,
@@ -338,7 +338,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KZ7D8X3PRK;
+				DEVELOPMENT_TEAM = 69YAAU9HP7;
 				INFOPLIST_FILE = "$(SRCROOT)/UVAHP/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -357,7 +357,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KZ7D8X3PRK;
+				DEVELOPMENT_TEAM = 69YAAU9HP7;
 				INFOPLIST_FILE = "$(SRCROOT)/UVAHP/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
