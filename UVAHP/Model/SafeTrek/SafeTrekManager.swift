@@ -28,10 +28,28 @@ extension SafeTrekManager {
             , options: [:], completionHandler: nil)
     }
 }
+
 extension SafeTrekManager {
     public var accessToken: String? {
         get { return UserDefaults.standard.string(forKey: "accessToken") }
         set { UserDefaults.standard.set(newValue, forKey: "accessToken") }
+    }
+
+    func makePostRequest(to url: URL, jsonData: Data) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpBody = jsonData
+        request.httpMethod = "POST"
+        request.addValue("Bearer \(accessToken ?? "")",
+            forHTTPHeaderField: "Authorization")
+        request.addValue("application/json",
+                         forHTTPHeaderField: "Content-Type")
+        return request
+    }
+}
+
+extension SafeTrekManager {
+    public func triggerAlarm(services: Services, location: LocationConvertible) {
+        triggerAlarm(services: services, location: location.coordinates)
     }
 
     public func triggerAlarm(services: Services, location: CodableLocation) {
@@ -39,22 +57,18 @@ extension SafeTrekManager {
         guard let data = try? JSONEncoder().encode(alarm)
             , let url = URL(string: "https://api-sandbox.safetrek.io/v1/alarms")
             else { return }
-        print(String.init(data: data, encoding: .utf8)!)
-        var request = URLRequest(url: url)
-        request.httpBody = data
-        request.httpMethod = "POST"
-        request.addValue("Bearer \(accessToken ?? "")",
-            forHTTPHeaderField: "Authorization")
-        request.addValue("application/json",
-                         forHTTPHeaderField: "Content-Type")
-        print(alarm)
+        let request = makePostRequest(to: url, jsonData: data)
         let task = URLSession.shared.dataTask(with: request) { (data, res, err) in
-            print(String(data: data!, encoding: .utf8)!)
+            struct IDExtractor: Decodable { let id: String }
+            guard let data = data
+                , let extractor = try? JSONDecoder()
+                    .decode(IDExtractor.self, from: data)
+                else { fatalError("Failed Create Alarm") }
+            self.activeAlarm = extractor.id
         }
         task.resume()
     }
 }
-
 
 struct Services: Codable {
     let police: Bool
@@ -136,8 +150,20 @@ extension Alarm: Codable {
 }
 
 extension SafeTrekManager {
-    public var refreshToken: String? {
-        get { return UserDefaults.standard.string(forKey: "refreshToken") }
-        set { UserDefaults.standard.set(newValue, forKey: "refreshToken") }
+    public var activeAlarm: String? {
+        get { return UserDefaults.standard.string(forKey: "activeAlarm") }
+        set { UserDefaults.standard.set(newValue, forKey: "activeAlarm") }
+    }
+}
+
+extension SafeTrekManager {
+    public func cancel() {
+        let dict = ["status": "CANCELED"]
+        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm ?? "")/status"
+        guard let url = URL(string: path)
+            , let data = try? JSONEncoder().encode(dict)
+            else { return }
+        let request = makePostRequest(to: url, jsonData: data)
+        URLSession.shared.dataTask(with: request).resume()
     }
 }
