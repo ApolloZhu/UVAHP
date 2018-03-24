@@ -13,6 +13,7 @@
 		52D9B2502066C4EF00B4D609 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B24F2066C4EF00B4D609 /* Assets.xcassets */; };
 		52D9B2532066C4EF00B4D609 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B2512066C4EF00B4D609 /* LaunchScreen.storyboard */; };
 		52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D9B25D2066C65A00B4D609 /* Extensions.swift */; };
+		6AFBF2182066DB24003DB256 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AFBF2172066DB24003DB256 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		52D9B2542066C4EF00B4D609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52D9B25D2066C65A00B4D609 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6AFBF2152066D7ED003DB256 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		6AFBF2172066DB24003DB256 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AFBF2182066DB24003DB256 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +46,7 @@
 			children = (
 				52D9B2472066C4E600B4D609 /* UVAHP */,
 				52D9B2462066C4E600B4D609 /* Products */,
+				6AFBF2162066DB24003DB256 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,6 +97,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		6AFBF2162066DB24003DB256 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6AFBF2172066DB24003DB256 /* MapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -125,6 +137,11 @@
 				TargetAttributes = {
 					52D9B2442066C4E600B4D609 = {
 						CreatedOnToolsVersion = 9.3;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
