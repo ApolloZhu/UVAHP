@@ -15,6 +15,15 @@ class SafeTrekManager {
     public static let shared = SafeTrekManager()
 }
 extension SafeTrekManager {
+    public var isLoggedIn: Bool {
+        return accessToken != nil
+    }
+
+    public var accessToken: String? {
+        get { return UserDefaults.standard.string(forKey: "accessToken") }
+        set { UserDefaults.standard.set(newValue, forKey: "accessToken") }
+    }
+
     public func login() {
         let string = "https://account-sandbox.safetrek.io/authorize?"
             + "client_id=m5qXF5ztOdT4cdQtUbZT2grBhF187vw6&"
@@ -24,18 +33,12 @@ extension SafeTrekManager {
             + "redirect_uri=https://uvahp.herokuapp.com/callback"
         let url = string
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        UIApplication.shared.open(URL(string: url!)!
-            , options: [:], completionHandler: nil)
-    }
-}
-
-extension SafeTrekManager {
-    public var accessToken: String? {
-        get { return UserDefaults.standard.string(forKey: "accessToken") }
-        set { UserDefaults.standard.set(newValue, forKey: "accessToken") }
+        UIApplication.shared.open(URL(string: url!)!,
+                                  options: [:],
+                                  completionHandler: nil)
     }
 
-    func makePostRequest(to url: URL, jsonData: Data) -> URLRequest {
+    private func makePostRequest(to url: URL, jsonData: Data) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpBody = jsonData
         request.httpMethod = "POST"
@@ -150,9 +153,37 @@ extension Alarm: Codable {
 }
 
 extension SafeTrekManager {
-    public var activeAlarm: String? {
+    private var activeAlarm: String? {
         get { return UserDefaults.standard.string(forKey: "activeAlarm") }
         set { UserDefaults.standard.set(newValue, forKey: "activeAlarm") }
+    }
+}
+
+extension SafeTrekManager {
+    public func updateLocation(to newLocation: LocationConvertible) {
+        updateLocation(to: newLocation.coordinates)
+    }
+    public func updateLocation(to newLocation: CodableLocation) {
+        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm ?? "")/locations"
+        let data: Data?
+        switch newLocation {
+        case let coord as Coordinates:
+            struct Wrapper: Encodable {
+                let coordinates: Coordinates
+            }
+            data = try? JSONEncoder().encode(Wrapper(coordinates: coord))
+        case let addr as Address:
+            struct Wrapper: Encodable {
+                let address: Address
+            }
+            data = try? JSONEncoder().encode(Wrapper(address: addr))
+        default: fatalError("Unsupported Type")
+        }
+        guard let url = URL(string: path)
+            , let jsonData = data
+            else { fatalError("Failed to update") }
+        let request = makePostRequest(to: url, jsonData: jsonData)
+        URLSession.shared.dataTask(with: request).resume()
     }
 }
 
@@ -162,7 +193,7 @@ extension SafeTrekManager {
         let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm ?? "")/status"
         guard let url = URL(string: path)
             , let data = try? JSONEncoder().encode(dict)
-            else { return }
+            else { fatalError("Failed to cancel") }
         let request = makePostRequest(to: url, jsonData: data)
         URLSession.shared.dataTask(with: request).resume()
     }
