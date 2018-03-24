@@ -16,6 +16,7 @@
 //
 import UIKit
 import AVFoundation
+import CoreLocation
 
 class DetailsView: UIView {
     
@@ -129,6 +130,56 @@ extension ViewController {
         
     }
 }
+class PlaceController: UIViewController, CLLocationManagerDelegate {
+    
+    var locationManager:CLLocationManager!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        determineMyCurrentLocation()
+    }
+    
+    
+    func determineMyCurrentLocation() {
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+            //locationManager.startUpdatingHeading()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+        let userLocation:CLLocation = locations[0] as CLLocation
+        
+        // Call stopUpdatingLocation() to stop listening for location updates,
+        // other wise this function will be called every time when user location changes.
+        
+        // manager.stopUpdatingLocation()
+        print("user latitude = \(userLocation.coordinate.latitude)")
+        print("user longitude = \(userLocation.coordinate.longitude)")
+//        return userLocation.coordinate.latitude;, userLocation.coordinate.longitude
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
+    {
+        print("Error \(error)")
+    }
+}
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -169,7 +220,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     if count >= limit{
                         // call function pass in current
                         print("Action")
-                       // interpretSignals(current: <#T##Int#>)
+                        interpretSignals()
                         count = 0
                     }
                     count += 1
@@ -185,8 +236,10 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
     
-    func interpretSignals(current: Int){
-        
+    func interpretSignals(){
+        var place = PlaceController()
+        place.determineMyCurrentLocation()
+//        SafeTrekManager.shared.triggerAlarm(services: <#T##Services#>, location: CodableLocation)
     }
     
     func outputSignals(face: CIFaceFeature) -> Int{
