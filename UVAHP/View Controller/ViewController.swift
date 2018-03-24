@@ -294,3 +294,11 @@ extension ViewController {
         }
     }
 }
+
+extension ViewController {
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            SafeTrekManager.shared.login()
+        }
+    }
+}
