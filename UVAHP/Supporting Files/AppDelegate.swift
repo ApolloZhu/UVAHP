@@ -42,8 +42,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        print(url.absoluteString)
-        return url.scheme == "uvahp"
+        guard let comp = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            , let item = comp.queryItems?.first(where: { $0.name == "code" })
+            , let newCode = item.value
+            else { fatalError("No Code") }
+        SafeTrekManager.shared.code = newCode
+        print(newCode)
+        return true
     }
 }
 
