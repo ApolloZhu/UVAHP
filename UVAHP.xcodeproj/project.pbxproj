@@ -13,6 +13,7 @@
 		52D9B2502066C4EF00B4D609 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B24F2066C4EF00B4D609 /* Assets.xcassets */; };
 		52D9B2532066C4EF00B4D609 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B2512066C4EF00B4D609 /* LaunchScreen.storyboard */; };
 		52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D9B25D2066C65A00B4D609 /* Extensions.swift */; };
+		52D9B2612066D04A00B4D609 /* SafeTrekManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D9B2602066D04A00B4D609 /* SafeTrekManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,9 +89,18 @@
 		52D9B25C2066C5FE00B4D609 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				52D9B25F2066D03500B4D609 /* SafeTrek */,
 				52D9B25D2066C65A00B4D609 /* Extensions.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		52D9B25F2066D03500B4D609 /* SafeTrek */ = {
+			isa = PBXGroup;
+			children = (
+				52D9B2602066D04A00B4D609 /* SafeTrekManager.swift */,
+			);
+			path = SafeTrek;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,6 +174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52D9B2612066D04A00B4D609 /* SafeTrekManager.swift in Sources */,
 				52D9B24B2066C4E600B4D609 /* ViewController.swift in Sources */,
 				52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */,
 				52D9B2492066C4E600B4D609 /* AppDelegate.swift in Sources */,
