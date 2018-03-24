@@ -21,11 +21,19 @@ class ViewController: UIViewController {
             guard let devices = AVCaptureDevice.devices(for: AVMediaType.video) as? [AVCaptureDevice] else { return nil }
             return devices.filter { $0.position == .front }.first
         }()
-        let deviceInput = try AVCaptureDeviceInput(device: frontCamera!)
+        let deviceInput = try! AVCaptureDeviceInput(device: frontCamera!)
         session.beginConfiguration()
         if session.canAddInput(deviceInput) {
             session.addInput(deviceInput)
         }
+        let output = AVCaptureVideoDataOutput()
+        output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String : NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+        output.alwaysDiscardsLateVideoFrames = true
+        if session.canAddOutput(output) {
+            session.addOutput(output)
+        }
+        session.commitConfiguration()
+        
 //        if face.hasLeftEyePosition || face.hasRightEyePosition{
 //            print("Hello World!")
 //        }
