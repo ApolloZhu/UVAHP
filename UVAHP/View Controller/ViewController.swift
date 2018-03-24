@@ -51,9 +51,9 @@ class ViewController: UIViewController {
     lazy var session: AVCaptureSession = .init()
     var stillOutput = AVCaptureStillImageOutput()
     var borderLayer: CAShapeLayer?
-    let limit = 5
+    let limit = 40
     var count = 0
-    var prev = -2
+    var prev = -1
     
     let detailsView: DetailsView = {
         let detailsView = DetailsView()
@@ -160,23 +160,21 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let current = outputSignals(face :faceFeature)
                 print("Count:", count)
                 print("Prev:", prev)
-                prev += 1
-                count += 1
-//                print("Current:", current)
-//                if prev != current{
-//                    count = 0
-//                    print("Inaction")
-//                }
-//                else if prev == current{
-//                    if count == limit{
-//                        // call function pass in current
-//                        print("Action")
-//                       // interpretSignals(current: <#T##Int#>)
-//                        count = 0
-//                    }
-//                    count += 1
-//                }
-//                prev = current
+                print("Current:", current)
+                if prev != current{
+                    count = 0
+                    print("Inaction")
+                }
+                else if prev == current && prev != -1{
+                    if count >= limit{
+                        // call function pass in current
+                        print("Action")
+                       // interpretSignals(current: <#T##Int#>)
+                        count = 0
+                    }
+                    count += 1
+                }
+                prev = current
             }
         }
         
