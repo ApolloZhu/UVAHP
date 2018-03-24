@@ -6,59 +6,6 @@
 ////  Copyright © 2018 UVAHP. All rights reserved.
 ////
 //
-//import UIKit
-//import AVFoundation
-//
-//class ViewController: UIViewController {
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        // Do any additional setup after loading the view, typically from a nib.
-//        let face = CIFaceFeature()
-//        let session = AVCaptureSession()
-//        session.sessionPreset = AVCaptureSession.Preset.photo
-//        var frontCamera: AVCaptureDevice? = {
-//            guard let devices = AVCaptureDevice.devices(for: AVMediaType.video) as? [AVCaptureDevice] else { return nil }
-//            return devices.filter { $0.position == .front }.first
-//        }()
-//        let deviceInput = try! AVCaptureDeviceInput(device: frontCamera!)
-//        session.beginConfiguration()
-//        if session.canAddInput(deviceInput) {
-//            session.addInput(deviceInput)
-//        }
-//        let output = AVCaptureVideoDataOutput()
-//        output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String : NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
-//        output.alwaysDiscardsLateVideoFrames = true
-//        if session.canAddOutput(output) {
-//            session.addOutput(output)
-//        }
-//        session.commitConfiguration()
-//        let queue = DispatchQueue(label: "output.queue")
-//        output.setSampleBufferDelegate(self as! AVCaptureVideoDataOutputSampleBufferDelegate, queue: queue)
-//
-//
-////        if face.hasLeftEyePosition || face.hasRightEyePosition{
-////            print("Hello World!")
-////        }
-//    }
-//
-//    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
-//        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-//        let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
-//        let ciImage = CIImage(cvImageBuffer: pixelBuffer!, options: attachments as! [String : Any]?)
-////        let options: [String : Any] = [CIDetectorImageOrientation: exifOrientation(orientation: UIDevice.current.orientation),
-////                                       CIDetectorSmile: true,
-////                                       CIDetectorEyeBlink: true]
-//
-//    }
-//
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//        // Dispose of any resources that can be recreated.
-//    }
-//
-//
-//}
 
 //
 //  ViewController.swift
@@ -198,11 +145,10 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         for feature in features {
             if let faceFeature = feature as? CIFaceFeature {
-                let faceRect = calculateFaceRect(facePosition: faceFeature.mouthPosition, faceBounds: faceFeature.bounds, clearAperture: cleanAperture)
+                let faceRect = calculateFaceRect(facePosition: faceFeature.rightEyePosition, faceBounds: faceFeature.bounds, clearAperture: cleanAperture)
                 let featureDetails = ["has smile: \(faceFeature.hasSmile)",
                     "has closed left eye: \(faceFeature.leftEyeClosed)",
                     "has closed right eye: \(faceFeature.rightEyeClosed)"]
-                
                 update(with: faceRect, text: featureDetails.joined(separator: "\n"))
             }
         }
@@ -255,7 +201,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         } else {
             videoBox.origin.y = (size.height - frameSize.height) / 2.0
         }
-        
+        print("")
         return videoBox
     }
     
@@ -271,6 +217,8 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let widthScaleBy = previewBox.size.width / clearAperture.size.height
         let heightScaleBy = previewBox.size.height / clearAperture.size.width
         
+        print("WidthScaleBy:", widthScaleBy)
+        print("HeightScaleBy:", heightScaleBy)
         faceRect.size.width *= widthScaleBy
         faceRect.size.height *= heightScaleBy
         faceRect.origin.x *= widthScaleBy
