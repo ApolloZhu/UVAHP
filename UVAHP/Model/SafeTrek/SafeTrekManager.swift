@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct SafeTrekManager {
+class SafeTrekManager {
     private init() { }
     public static let shared = SafeTrekManager()
     public func login() {
@@ -21,5 +21,9 @@ struct SafeTrekManager {
                 + "response_type=code&"
                 + "redirect_uri=uvahp://")!
             , options: [:], completionHandler: nil)
+    }
+    public var code: String? {
+        get { return UserDefaults.standard.string(forKey: "CODE") }
+        set { UserDefaults.standard.set(newValue, forKey: "CODE") }
     }
 }

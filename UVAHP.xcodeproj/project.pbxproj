@@ -75,7 +75,6 @@
 				52D9B24F2066C4EF00B4D609 /* Assets.xcassets */,
 				52D9B2512066C4EF00B4D609 /* LaunchScreen.storyboard */,
 				52D9B2542066C4EF00B4D609 /* Info.plist */,
-				6AFBF2152066D7ED003DB256 /* Config.xcconfig */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -92,6 +91,7 @@
 		52D9B25C2066C5FE00B4D609 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				52E7DC932066DB5F00BFE2E7 /* SafeTrek */,
 				52D9B25D2066C65A00B4D609 /* Extensions.swift */,
 			);
 			path = Model;
@@ -181,6 +181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52E7DC952066DB5F00BFE2E7 /* SafeTrekManager.swift in Sources */,
 				52D9B24B2066C4E600B4D609 /* ViewController.swift in Sources */,
 				52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */,
 				52D9B2492066C4E600B4D609 /* AppDelegate.swift in Sources */,
@@ -328,7 +329,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 69YAAU9HP7;
+				DEVELOPMENT_TEAM = KZ7D8X3PRK;
 				INFOPLIST_FILE = "$(SRCROOT)/UVAHP/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -347,7 +348,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 69YAAU9HP7;
+				DEVELOPMENT_TEAM = KZ7D8X3PRK;
 				INFOPLIST_FILE = "$(SRCROOT)/UVAHP/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
