@@ -12,6 +12,7 @@
 		52D9B24E2066C4E600B4D609 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B24C2066C4E600B4D609 /* Main.storyboard */; };
 		52D9B2502066C4EF00B4D609 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B24F2066C4EF00B4D609 /* Assets.xcassets */; };
 		52D9B2532066C4EF00B4D609 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52D9B2512066C4EF00B4D609 /* LaunchScreen.storyboard */; };
+		52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D9B25D2066C65A00B4D609 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		52D9B24F2066C4EF00B4D609 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		52D9B2522066C4EF00B4D609 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		52D9B2542066C4EF00B4D609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52D9B25D2066C65A00B4D609 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +56,39 @@
 		52D9B2472066C4E600B4D609 /* UVAHP */ = {
 			isa = PBXGroup;
 			children = (
+				52D9B25C2066C5FE00B4D609 /* Model */,
+				52D9B25B2066C5F700B4D609 /* View Controller */,
+				52D9B25A2066C5E700B4D609 /* Supporting Files */,
+			);
+			path = UVAHP;
+			sourceTree = "<group>";
+		};
+		52D9B25A2066C5E700B4D609 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
 				52D9B2482066C4E600B4D609 /* AppDelegate.swift */,
-				52D9B24A2066C4E600B4D609 /* ViewController.swift */,
-				52D9B24C2066C4E600B4D609 /* Main.storyboard */,
 				52D9B24F2066C4EF00B4D609 /* Assets.xcassets */,
 				52D9B2512066C4EF00B4D609 /* LaunchScreen.storyboard */,
 				52D9B2542066C4EF00B4D609 /* Info.plist */,
 			);
-			path = UVAHP;
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		52D9B25B2066C5F700B4D609 /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				52D9B24C2066C4E600B4D609 /* Main.storyboard */,
+				52D9B24A2066C4E600B4D609 /* ViewController.swift */,
+			);
+			path = "View Controller";
+			sourceTree = "<group>";
+		};
+		52D9B25C2066C5FE00B4D609 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				52D9B25D2066C65A00B4D609 /* Extensions.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,6 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52D9B24B2066C4E600B4D609 /* ViewController.swift in Sources */,
+				52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */,
 				52D9B2492066C4E600B4D609 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,7 +310,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = UVAHP/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/UVAHP/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -301,7 +329,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = UVAHP/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/UVAHP/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
