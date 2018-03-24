@@ -51,6 +51,9 @@ class ViewController: UIViewController {
     lazy var session: AVCaptureSession = .init()
     var stillOutput = AVCaptureStillImageOutput()
     var borderLayer: CAShapeLayer?
+    let limit = 5
+    var count = 0
+    var prev = -2
     
     let detailsView: DetailsView = {
         let detailsView = DetailsView()
@@ -150,9 +153,30 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     "has closed left eye: \(faceFeature.leftEyeClosed)",
                     "has closed right eye: \(faceFeature.rightEyeClosed)"]
                 update(with: faceRect, text: featureDetails.joined(separator: "\n"))
-                print("has smile: \(faceFeature.hasSmile)",
-                    "has closed left eye: \(faceFeature.leftEyeClosed)",
-                    "has closed right eye: \(faceFeature.rightEyeClosed)")
+//                print("has smile: \(faceFeature.hasSmile)",
+//                    "has closed left eye: \(faceFeature.leftEyeClosed)",
+//                    "has closed right eye: \(faceFeature.rightEyeClosed)")
+//                interpretSignals(face :faceFeature)
+                let current = outputSignals(face :faceFeature)
+                print("Count:", count)
+                print("Prev:", prev)
+                prev += 1
+                count += 1
+//                print("Current:", current)
+//                if prev != current{
+//                    count = 0
+//                    print("Inaction")
+//                }
+//                else if prev == current{
+//                    if count == limit{
+//                        // call function pass in current
+//                        print("Action")
+//                       // interpretSignals(current: <#T##Int#>)
+//                        count = 0
+//                    }
+//                    count += 1
+//                }
+//                prev = current
             }
         }
         
@@ -161,7 +185,29 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 self.detailsView.alpha = 0.0
             }
         }
+    }
+    
+    func interpretSignals(current: Int){
         
+    }
+    
+    func outputSignals(face: CIFaceFeature) -> Int{
+        //Ambulance
+        if face.rightEyeClosed && face.leftEyeClosed{
+            print("Both")
+            return 2
+        }
+        //Police
+        else if face.leftEyeClosed{
+            print("Left")
+            return 1
+        }
+        //Fire
+        else if face.rightEyeClosed{
+            print("Right")
+            return 0
+        }
+        return -1
     }
     
     func exifOrientation(orientation: UIDeviceOrientation) -> Int {

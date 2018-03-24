@@ -27,23 +27,32 @@
                                 <rect key="frame" x="0.0" y="341.5" width="375" height="309.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vm7-Oa-PDJ">
-                                        <rect key="frame" x="27.5" y="0.0" width="320" height="151"/>
+                                        <rect key="frame" x="52" y="0.0" width="271" height="55.5"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="This will be replaced by actual address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hw5-P7-kuT">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="71.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="271" height="55.5"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
-                                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l3S-tv-0xD">
-                                                <rect key="frame" x="0.0" y="79.5" width="320" height="71.5"/>
-                                            </pickerView>
                                         </subviews>
                                     </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DQV-Z6-jUb">
+                                        <rect key="frame" x="149" y="63.5" width="77" height="55.5"/>
+                                        <state key="normal" title="Ambulance"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WVB-fp-Rnp">
+                                        <rect key="frame" x="131.5" y="127" width="112" height="55.5"/>
+                                        <state key="normal" title="Fire Department"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCN-b7-AeK">
+                                        <rect key="frame" x="166.5" y="190.5" width="42" height="55.5"/>
+                                        <state key="normal" title="Police"/>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7nW-vu-C1f">
-                                        <rect key="frame" x="112" y="159" width="151" height="150.5"/>
+                                        <rect key="frame" x="132" y="254" width="111" height="55.5"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="1:1" id="UI1-z5-Mxq"/>
+                                            <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="2:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
                                         </constraints>
                                         <state key="normal" title="Help Me!"/>
                                     </button>
