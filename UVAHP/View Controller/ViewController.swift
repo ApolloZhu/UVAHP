@@ -79,14 +79,14 @@ class ViewController: UIViewController {
         previewLayer?.frame = view.frame
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        guard let previewLayer = previewLayer else { return }
-        
-        view.layer.addSublayer(previewLayer)
-        view.addSubview(detailsView)
-        view.bringSubview(toFront: detailsView)
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        guard let previewLayer = previewLayer else { return }
+//
+//        view.layer.addSublayer(previewLayer)
+//        view.addSubview(detailsView)
+//        view.bringSubview(toFront: detailsView)
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -150,6 +150,9 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     "has closed left eye: \(faceFeature.leftEyeClosed)",
                     "has closed right eye: \(faceFeature.rightEyeClosed)"]
                 update(with: faceRect, text: featureDetails.joined(separator: "\n"))
+                print("has smile: \(faceFeature.hasSmile)",
+                    "has closed left eye: \(faceFeature.leftEyeClosed)",
+                    "has closed right eye: \(faceFeature.rightEyeClosed)")
             }
         }
         
