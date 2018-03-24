@@ -16,6 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        if SafeTrekManager.shared.accessToken == nil {
+            SafeTrekManager.shared.login()
+        }
         return true
     }
 
@@ -42,12 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        guard let comp = URLComponents(url: url, resolvingAgainstBaseURL: true)
-            , let item = comp.queryItems?.first(where: { $0.name == "code" })
-            , let newCode = item.value
-            else { fatalError("No Code") }
-        SafeTrekManager.shared.code = newCode
-        print(newCode)
+        guard let comp = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            , let item = comp.queryItems, item.count == 3
+            else { return false }
+        SafeTrekManager.shared.accessToken = item[0].value
+        SafeTrekManager.shared.refreshToken = item[2].value
         return true
     }
 }
