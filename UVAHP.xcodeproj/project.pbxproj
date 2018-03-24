@@ -26,7 +26,6 @@
 		52D9B2542066C4EF00B4D609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52D9B25D2066C65A00B4D609 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		52E7DC942066DB5F00BFE2E7 /* SafeTrekManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafeTrekManager.swift; sourceTree = "<group>"; };
-		6AFBF2152066D7ED003DB256 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +72,6 @@
 				52D9B24F2066C4EF00B4D609 /* Assets.xcassets */,
 				52D9B2512066C4EF00B4D609 /* LaunchScreen.storyboard */,
 				52D9B2542066C4EF00B4D609 /* Info.plist */,
-				6AFBF2152066D7ED003DB256 /* Config.xcconfig */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
