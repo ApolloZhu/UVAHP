@@ -13,6 +13,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let face = CIFaceFeature()
+        if face.hasLeftEyePosition || face.hasRightEyePosition{
+            print("Hello World!")
+        }
     }
 
     override func didReceiveMemoryWarning() {
