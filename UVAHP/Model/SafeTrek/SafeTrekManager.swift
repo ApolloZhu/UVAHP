@@ -34,12 +34,15 @@ extension SafeTrekManager {
         set { UserDefaults.standard.set(newValue, forKey: "accessToken") }
     }
 
+    public func triggerAlarm(services: Services, location: LocationConvertible) {
+        triggerAlarm(services: services, location: location.coordinates)
+    }
+
     public func triggerAlarm(services: Services, location: CodableLocation) {
         let alarm = Alarm(services: services, location: location)
         guard let data = try? JSONEncoder().encode(alarm)
             , let url = URL(string: "https://api-sandbox.safetrek.io/v1/alarms")
             else { return }
-        print(String.init(data: data, encoding: .utf8)!)
         var request = URLRequest(url: url)
         request.httpBody = data
         request.httpMethod = "POST"
@@ -47,7 +50,6 @@ extension SafeTrekManager {
             forHTTPHeaderField: "Authorization")
         request.addValue("application/json",
                          forHTTPHeaderField: "Content-Type")
-        print(alarm)
         let task = URLSession.shared.dataTask(with: request) { (data, res, err) in
             print(String(data: data!, encoding: .utf8)!)
         }
