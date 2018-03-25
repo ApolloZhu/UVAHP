@@ -36,9 +36,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Needed for functionality of app</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Needed for functionality of app</string>
+	<string>Do you allow this app to know your current location?</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Needed for functionality of app</string>
+	<string>Will you allow this app to always know your location?</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Needed for functionality of app</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

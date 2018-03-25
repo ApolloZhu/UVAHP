@@ -48,7 +48,13 @@ class DetailsView: UIView {
 
 
 class ViewController: UIViewController {
-    
+    lazy var locationManager: CLLocationManager = {
+        let locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        return locationManager
+    }()
+
     lazy var session: AVCaptureSession = .init()
     var stillOutput = AVCaptureStillImageOutput()
     var borderLayer: CAShapeLayer?
@@ -101,7 +107,7 @@ class ViewController: UIViewController {
 
 let queue = DispatchQueue(label: "output.queue")
 
-extension ViewController {
+extension ViewController: CLLocationManagerDelegate {
     
     func sessionPrepare() {
         guard let captureDevice = frontCamera else { return }
@@ -129,34 +135,20 @@ extension ViewController {
         session.commitConfiguration()
         
     }
-}
-class PlaceController: UIViewController, CLLocationManagerDelegate {
-    
-    var locationManager:CLLocationManager!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        determineMyCurrentLocation()
+        requestAuthorization()
     }
     
     
-    func determineMyCurrentLocation() {
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    func requestAuthorization() {
         locationManager.requestAlwaysAuthorization()
-        
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
             //locationManager.startUpdatingHeading()
@@ -164,7 +156,7 @@ class PlaceController: UIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        let userLocation:CLLocation = locations[0] as CLLocation
+        let userLocation = locations[0]
         
         // Call stopUpdatingLocation() to stop listening for location updates,
         // other wise this function will be called every time when user location changes.
@@ -237,8 +229,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     func interpretSignals(){
-        var place = PlaceController()
-        place.determineMyCurrentLocation()
+        requestAuthorization()
 //        SafeTrekManager.shared.triggerAlarm(services: <#T##Services#>, location: CodableLocation)
     }
     
