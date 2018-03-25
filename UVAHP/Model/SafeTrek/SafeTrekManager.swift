@@ -223,7 +223,7 @@ extension SafeTrekManager {
 
     public func updateLocation(to newLocation: CodableLocation) {
         guard isActive else { return }
-        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm)/locations"
+        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm!)/locations"
         let data: Data?
         switch newLocation {
         case let coord as Coordinates:
@@ -250,7 +250,8 @@ extension SafeTrekManager {
     public func cancel() {
         guard isActive else { return }
         let dict = ["status": "CANCELED"]
-        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm)/status"
+        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm!)/status"
+        activeAlarm = nil
         guard let url = URL(string: path)
             , let data = try? JSONEncoder().encode(dict)
             else { fatalError("Failed to cancel") }

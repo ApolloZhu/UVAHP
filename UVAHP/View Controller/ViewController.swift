@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     lazy var session: AVCaptureSession = .init()
     var stillOutput = AVCaptureStillImageOutput()
     var borderLayer: CAShapeLayer?
-    let limit = 40
+    let limit = 30
     var count = 0
     var prev = -1
     var setCalls = Set<Int>()
@@ -242,9 +242,11 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 //                interpretSignals(face :faceFeature)
                 let current = outputSignals(face :faceFeature)
                 print("Count:", count)
-                print("Prev:", prev)
-                print("Current:", current)
-                if faceFeature.hasSmile {
+//                print("Prev:", prev)
+//                print("Current:", current)
+//                if faceFeature.hasSmile && !SafeTrekManager.shared.isActive {
+                if faceFeature.hasSmile{
+                    print("Smile~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     submit()
                 }
                 if prev != current {
@@ -254,7 +256,15 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     if count >= limit {
                         // call function pass in current
                         print("Action")
-                        submit()
+                        if current == 0{
+                            didTapFireButton()
+                        }
+                        else if current == 1{
+                            didTapPoliceButton()
+                        }
+                        else if current == 2{
+                            didTapAmbulanceButton()
+                        }
                         count = 0
                     }
                     count += 1
@@ -345,8 +355,6 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let widthScaleBy = previewBox.size.width / clearAperture.size.height
         let heightScaleBy = previewBox.size.height / clearAperture.size.width
         
-        print("WidthScaleBy:", widthScaleBy)
-        print("HeightScaleBy:", heightScaleBy)
         faceRect.size.width *= widthScaleBy
         faceRect.size.height *= heightScaleBy
         faceRect.origin.x *= widthScaleBy
