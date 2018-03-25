@@ -83,7 +83,10 @@ class ViewController: UIViewController {
         // return devices.filter { $0.position == .front }.first!
     }()
     
-    let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy : CIDetectorAccuracyLow])
+    let faceDetector = CIDetector(
+        ofType: CIDetectorTypeFace, context: nil,
+        options: [CIDetectorAccuracy : CIDetectorAccuracyHigh]
+    )
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -104,6 +107,8 @@ class ViewController: UIViewController {
         sessionPrepare()
         session.startRunning()
         requestAuthorization()
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelUI),
+                                               name: .safeTrekDidCancel, object: nil)
     }
     
     @IBOutlet weak var fireButton: UIButton!
@@ -149,9 +154,6 @@ class ViewController: UIViewController {
             submitButton.setTitle("Cancel", for: .normal)
             print("Smile-Set title to cancel")
             startUpdate()
-            locationManager.location!.fetchStatistics {
-                print($0 ?? "Nothing Found")
-            }
             SafeTrekManager.shared.triggerAlarm(
                 services: Services(
                     police: policeButton.isSelected,
@@ -163,9 +165,12 @@ class ViewController: UIViewController {
     }
 
     private func cancel() {
+        SafeTrekManager.shared.cancel()
+    }
+
+    @objc private func cancelUI() {
         print("Smile-Cancel")
         stopUpdate()
-        SafeTrekManager.shared.cancel()
         submitButton.setTitle("Submit", for: .normal)
         smiled = false
     }
@@ -175,11 +180,11 @@ class ViewController: UIViewController {
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         stopUpdate()
         SafeTrekManager.shared.cancel()
     }
 }
-
 
 let queue = DispatchQueue(label: "output.queue")
 
@@ -246,16 +251,18 @@ extension ViewController: CLLocationManagerDelegate {
 
 var smiled = false
 
-
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+    func captureOutput(_ output: AVCaptureOutput,
+                       didOutput sampleBuffer: CMSampleBuffer,
+                       from connection: AVCaptureConnection) {
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
-        let ciImage = CIImage(cvImageBuffer: pixelBuffer!, options: attachments as! [String : Any]?)
-        let options: [String : Any] = [CIDetectorImageOrientation: exifOrientation(orientation: UIDevice.current.orientation),
-                                       CIDetectorSmile: true,
-                                       CIDetectorEyeBlink: true]
+        let ciImage = CIImage(cvImageBuffer: pixelBuffer!, options: attachments as? [String : Any])
+        let options: [String : Any] = [
+            CIDetectorImageOrientation: exifOrientation(orientation: UIDevice.current.orientation),
+            CIDetectorSmile: true,
+            CIDetectorEyeBlink: true
+        ]
         let allFeatures = faceDetector?.features(in: ciImage, options: options)
         
         let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer)
@@ -270,20 +277,11 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     "has closed left eye: \(faceFeature.leftEyeClosed)",
                     "has closed right eye: \(faceFeature.rightEyeClosed)"]
                 update(with: faceRect, text: featureDetails.joined(separator: "\n"))
-                //                print("has smile: \(faceFeature.hasSmile)",
-                //                    "has closed left eye: \(faceFeature.leftEyeClosed)",
-                //                    "has closed right eye: \(faceFeature.rightEyeClosed)")
-                //                interpretSignals(face :faceFeature)
                 let current = outputSignals(face :faceFeature)
                 print("Count:", count)
-//                print("Prev:", prev)
-//                print("Current:", current)
                 if faceFeature.hasSmile && smiled == false {
-//                if faceFeature.hasSmile{
                     print("Smile")
-                    DispatchQueue.main.async {
-                        self.submit()
-                    }
+                    ui { self.submit() }
                 }
                 if prev != current {
                     count = 0
@@ -291,19 +289,21 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 } else if prev == current && prev != -1 {
                     if count >= limit {
                         // call function pass in current
-                        print("Action")
-                        if current == 0 && isFireSelected { //lefteye <- based on user eye
-                            print("FireButton")
-                            ui { self.didTapFireButton() }
+                        ui {
+                            print("Action")
+                            if current == 0 && self.isFireSelected { //lefteye <- based on user eye
+                                print("FireButton")
+                                self.didTapFireButton()
+                            }
+                            else if current == 1 && self.isPoliceSelected { //righteye <- based on user eye
+                                print("PoliceButton")
+                                self.didTapPoliceButton()
+                            } else if current == 2 && self.isAmbulanceSelected { //botheye
+                                print("AmbulanceButton")
+                                self.didTapAmbulanceButton()
+                            }
+                            self.count = 0
                         }
-                        else if current == 1 && isPoliceSelected { //righteye <- based on user eye
-                            print("PoliceButton")
-                            ui { self.didTapPoliceButton() }
-                        } else if current == 2 && isAmbulanceSelected { //botheye
-                            print("AmbulanceButton")
-                            ui { self.didTapAmbulanceButton() }
-                        }
-                        count = 0
                     }
                     count += 1
                 }
@@ -407,7 +407,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
 extension ViewController {
     func update(with faceRect: CGRect, text: String) {
-        DispatchQueue.main.async {
+        ui {
             UIView.animate(withDuration: 0.2) {
                 self.detailsView.detailsLabel.text = text
                 self.detailsView.alpha = 1.0

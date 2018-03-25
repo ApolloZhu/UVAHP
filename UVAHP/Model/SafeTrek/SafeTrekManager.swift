@@ -75,9 +75,8 @@ extension SafeTrekManager {
             struct IDExtractor: Decodable { let id: String }
             guard let data = data
                 , let extractor = try? JSONDecoder()
-                    .decode(IDExtractor.self, from: data)
-                else {
-                    return UIApplication.shared.open(URL(string: "telprompt:911")!)
+                    .decode(IDExtractor.self, from: data) else {
+                        return UIApplication.shared.open(URL(string: "telprompt:911")!)
             }
             self.activeAlarm = extractor.id
             let center = UNUserNotificationCenter.current()
@@ -85,7 +84,8 @@ extension SafeTrekManager {
             content.title = "Incident Reported!"
             content.body = "Be claim and wait for furthur instructions!"
             let cancel = UNNotificationAction(identifier: "cancel", title: "Cancel", options: .destructive)
-            let category = UNNotificationCategory.init(identifier: "Category", actions: [cancel], intentIdentifiers: [], options: [])
+            let category = UNNotificationCategory(identifier: "Category", actions: [cancel],
+                                                  intentIdentifiers: [], options: [])
             center.setNotificationCategories([category])
             content.categoryIdentifier = "Category"
             let request = UNNotificationRequest(
@@ -262,6 +262,10 @@ extension SafeTrekManager {
     }
 }
 
+extension Notification.Name {
+    static let safeTrekDidCancel = Notification.Name("safeTrekDidCancel")
+}
+
 extension SafeTrekManager {
     public func cancel() {
         guard isActive else { return }
@@ -273,5 +277,6 @@ extension SafeTrekManager {
             else { return showError("Failed to cancel.") }
         let request = makePostRequest(to: url, jsonData: data)
         URLSession.shared.dataTask(with: request).resume()
+        NotificationCenter.default.post(Notification(name: .safeTrekDidCancel))
     }
 }

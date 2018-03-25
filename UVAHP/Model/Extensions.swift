@@ -10,16 +10,11 @@ import Foundation
 import AVFoundation
 import UserNotifications
 
-struct Exception: Error {
-    
-}
+struct Exception: Error { }
 
-func print(_ items: Any...) {
+func speak(_ content: String) {
     DispatchQueue.global().async {
-        Swift.print(items)
-        #if DEBUG
-        AVSpeechSynthesizer().speak(.init(string: "\(items)"))
-        #endif
+        AVSpeechSynthesizer().speak(.init(string: content))
     }
 }
 
