@@ -82,7 +82,7 @@ extension SafeTrekManager {
             let center = UNUserNotificationCenter.current()
             let content = UNMutableNotificationContent()
             content.title = "Incident Reported!"
-            content.body = "Be claim and wait for furthur instructions!"
+            content.body = "Be calm and wait for furthur instructions!"
             let cancel = UNNotificationAction(identifier: "cancel", title: "Cancel", options: .destructive)
             let category = UNNotificationCategory(identifier: "Category", actions: [cancel],
                                                   intentIdentifiers: [], options: [])
