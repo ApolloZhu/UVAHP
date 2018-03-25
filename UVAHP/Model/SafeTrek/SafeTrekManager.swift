@@ -198,7 +198,11 @@ extension Alarm: Codable {
 }
 
 extension SafeTrekManager {
-    private var activeAlarm: String? {
+    public var isActive: Bool {
+        return activeAlarm != nil
+    }
+
+    private var activeAlarm: String! {
         get { return UserDefaults.standard.string(forKey: "activeAlarm") }
         set { UserDefaults.standard.set(newValue, forKey: "activeAlarm") }
     }
@@ -218,7 +222,8 @@ extension SafeTrekManager {
     }
 
     public func updateLocation(to newLocation: CodableLocation) {
-        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm ?? "")/locations"
+        guard isActive else { return }
+        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm)/locations"
         let data: Data?
         switch newLocation {
         case let coord as Coordinates:
@@ -243,8 +248,9 @@ extension SafeTrekManager {
 
 extension SafeTrekManager {
     public func cancel() {
+        guard isActive else { return }
         let dict = ["status": "CANCELED"]
-        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm ?? "")/status"
+        let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm)/status"
         guard let url = URL(string: path)
             , let data = try? JSONEncoder().encode(dict)
             else { fatalError("Failed to cancel") }
