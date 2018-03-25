@@ -148,16 +148,16 @@ extension ViewController: CLLocationManagerDelegate {
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation = locations[0]
         
         // Call stopUpdatingLocation() to stop listening for location updates,
         // other wise this function will be called every time when user location changes.
         
         // manager.stopUpdatingLocation()
-        print("user latitude = \(userLocation.coordinate.latitude)")
-        print("user longitude = \(userLocation.coordinate.longitude)")
-//        return userLocation.coordinate.latitude;, userLocation.coordinate.longitude
+        //print("user latitude = \(userLocation.coordinate.latitude)")
+        //print("user longitude = \(userLocation.coordinate.longitude)")
+        //return userLocation.coordinate.latitude;, userLocation.coordinate.longitude
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
@@ -223,7 +223,8 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     func interpretSignals(){
         requestAuthorization()
-//        SafeTrekManager.shared.triggerAlarm(services: <#T##Services#>, location: CodableLocation)
+        
+        SafeTrekManager.shared.triggerAlarm(services: <#T##Services#>, location: locationManager.location!)
     }
     
     func outputSignals(face: CIFaceFeature) -> Int{

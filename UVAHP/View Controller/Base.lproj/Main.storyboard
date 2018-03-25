@@ -54,7 +54,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="2:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
                                         </constraints>
-                                        <state key="normal" title="Help Me!"/>
+                                        <state key="normal" title="Submit"/>
                                     </button>
                                 </subviews>
                             </stackView>
