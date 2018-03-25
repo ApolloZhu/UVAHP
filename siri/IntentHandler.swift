@@ -42,7 +42,7 @@ class IntentHandler: INExtension, INSendMessageIntentHandling, INSearchForMessag
             for recipient in recipients {
                 let matchingContacts = [recipient] // Implement your contact matching logic here to create an array of matching contacts
                 switch matchingContacts.count {
-                case 2  ... Int.max:
+                case 2...:
                     // We need Siri's help to ask user to pick one from the matches.
                     resolutionResults += [INPersonResolutionResult.disambiguation(with: matchingContacts)]
                     
@@ -65,9 +65,9 @@ class IntentHandler: INExtension, INSendMessageIntentHandling, INSearchForMessag
     
     func resolveContent(for intent: INSendMessageIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
         if let text = intent.content, !text.isEmpty {
-            completion(INStringResolutionResult.success(with: text))
+            completion(.success(with: text))
         } else {
-            completion(INStringResolutionResult.needsValue())
+            completion(.needsValue())
         }
     }
     
