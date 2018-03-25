@@ -21,4 +21,4 @@ source 'https://github.com/CocoaPods/Specs.git'
      pod 'AWSSimpleDB'
      pod 'AWSSNS'
      pod 'AWSSQS'
- end
+end

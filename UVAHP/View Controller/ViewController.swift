@@ -103,6 +103,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         sessionPrepare()
         session.startRunning()
+        requestAuthorization()
     }
     
     @IBOutlet weak var fireButton: UIButton!
@@ -158,13 +159,15 @@ class ViewController: UIViewController {
                     medical: ambulanceButton.isSelected
                 ), location: locationManager.location!
             )
-        } else {
-            print("Smile-Cancel")
-            stopUpdate()
-            SafeTrekManager.shared.cancel()
-            submitButton.setTitle("Submit", for: .normal)
-            smiled = false
-        }
+        } else { cancel() }
+    }
+
+    private func cancel() {
+        print("Smile-Cancel")
+        stopUpdate()
+        SafeTrekManager.shared.cancel()
+        submitButton.setTitle("Submit", for: .normal)
+        smiled = false
     }
     
     func stopUpdate() {
@@ -211,7 +214,11 @@ extension ViewController: CLLocationManagerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        requestAuthorization()
+        if SafeTrekManager.shared.isActive {
+            submitButton.setTitle("Cancel", for: .normal)
+        } else {
+            cancel()
+        }
     }
     
     
