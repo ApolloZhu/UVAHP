@@ -16,6 +16,8 @@ struct Exception: Error {
 func print(_ items: Any...) {
     DispatchQueue.global().async {
         Swift.print(items)
+        #if DEBUG
         AVSpeechSynthesizer().speak(.init(string: "\(items)"))
+        #endif
     }
 }
