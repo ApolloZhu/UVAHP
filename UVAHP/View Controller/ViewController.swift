@@ -106,8 +106,13 @@ class ViewController: UIViewController {
     // MARK: - Actions
 
     func enableSubmitIfPossible() {
-        if !someServicesSelected { submitButton.isEnabled = false }
-        else { submitButton.isEnabled = true }
+        if !someServicesSelected {
+            submitButton.isEnabled = false
+            resetTimer()
+            submitButton.setTitle(.submit, for: .normal)
+        } else {
+            submitButton.isEnabled = true
+        }
     }
     
     @IBAction func didTapFireButton() {
