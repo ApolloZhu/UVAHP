@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  UVAHP
 //
-//  Created by Apollo Zhu on 3/24/18.
+//  Created by Apollo Zhu, Elizabeth Louie, Caroline Jin, and Ashley Young on 3/24/18.
 //  Copyright © 2018 UVAHP. All rights reserved.
 //
 
