@@ -70,7 +70,7 @@ extension CLPlacemark: CoordinatesConvertible, AddressConvertible {
     var coordinates: Coordinates! {
         return location?.coordinates
     }
-
+    
     var address: Address! {
         let info = [thoroughfare, subThoroughfare, locality, administrativeArea, postalCode]
         guard info.first(where: { $0 != nil }) != nil else { return nil }
