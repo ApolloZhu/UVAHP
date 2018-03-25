@@ -8,21 +8,23 @@
 
 import UIKit
 import UserNotifications
-//import GooglePlaces
 import GoogleMaps
+import Intents
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        SafeTrekManager.shared.openURL = {
+            UIApplication.shared.open($0)
+        }
         if SafeTrekManager.shared.accessToken == nil {
             SafeTrekManager.shared.login()
         }
-        SafeTrekManager.shared.cancel()
+        SafeTrekManager.shared.cancel(notify: false)
         let center = UNUserNotificationCenter.current()
         center.delegate = self
         center.requestAuthorization(options: [.alert, .badge, .sound])
@@ -30,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Is authorized: \(authorized)")
         }
         GMSServices.provideAPIKey("AIzaSyAJEW3JOLuQubXYyrkStoQvur2DvrQ8hjk")
+        INPreferences.requestSiriAuthorization { _ in }
         return true
     }
 
@@ -53,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        SafeTrekManager.shared.cancel()
+        SafeTrekManager.shared.cancel(notify: false)
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {

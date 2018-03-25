@@ -146,8 +146,8 @@ class ViewController: UIViewController {
         }
     }
     
-    private func cancel() {
-        SafeTrekManager.shared.cancel()
+    private func cancel(notify: Bool = false) {
+        SafeTrekManager.shared.cancel(notify: notify)
     }
     
     @objc private func cancelUI() {
@@ -166,7 +166,7 @@ class ViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
         stopUpdate()
-        SafeTrekManager.shared.cancel()
+        SafeTrekManager.shared.cancel(notify: false)
     }
 }
 
@@ -207,7 +207,7 @@ extension ViewController: CLLocationManagerDelegate {
         if SafeTrekManager.shared.isActive {
             submitButton.setTitle("Cancel", for: .normal)
         } else {
-            cancel()
+            cancel(notify: false)
         }
     }
     

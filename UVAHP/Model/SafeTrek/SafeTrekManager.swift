@@ -14,6 +14,8 @@ import UserNotifications
 class SafeTrekManager {
     private init() { }
     public static let shared = SafeTrekManager()
+    var openURL: ((URL) -> Void)?
+    let ud = UserDefaults(suiteName: "group.com.herokuapp.uvahp.iosgroup")!
 }
 
 // MARK: - Authentication
@@ -24,8 +26,8 @@ extension SafeTrekManager {
     }
     
     public var accessToken: String? {
-        get { return UserDefaults.standard.string(forKey: "accessToken") }
-        set { UserDefaults.standard.set(newValue, forKey: "accessToken") }
+        get { return ud.string(forKey: "accessToken") }
+        set { ud.set(newValue, forKey: "accessToken") }
     }
     
     public func login() {
@@ -35,9 +37,8 @@ extension SafeTrekManager {
             // + "state=<state_string>&"
             + "response_type=code&"
             + "redirect_uri=https://uvahp.herokuapp.com/callback"
-        let url = string
-            .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        UIApplication.shared.open(URL(string: url!)!)
+        openURL?(URL(string: string.addingPercentEncoding(
+            withAllowedCharacters: .urlQueryAllowed)!)!)
     }
     
     private func makePostRequest(to url: URL, jsonData: Data) -> URLRequest {
@@ -89,8 +90,9 @@ extension SafeTrekManager {
                         if isPrompting { return }
                         isPrompting = true
                         speak("Do you want to call nine one one instead?")
-                        UIApplication.shared.open(URL(string: "telprompt:911")!)
-                        { _ in isPrompting = false;isProcessing = false }
+                        self.openURL?(URL(string: "telprompt:911")!)
+                        isPrompting = false
+                        isProcessing = false
                         return
             }
             self.activeAlarm = extractor.id
@@ -160,8 +162,8 @@ extension SafeTrekManager {
     }
     
     private var activeAlarm: String! {
-        get { return UserDefaults.standard.string(forKey: "activeAlarm") }
-        set { UserDefaults.standard.set(newValue, forKey: "activeAlarm") }
+        get { return ud.string(forKey: "activeAlarm") }
+        set { ud.set(newValue, forKey: "activeAlarm") }
     }
 }
 
@@ -212,7 +214,7 @@ extension Notification.Name {
 }
 
 extension SafeTrekManager {
-    public func cancel() {
+    public func cancel(notify: Bool = true) {
         NotificationCenter.default.post(Notification(name: .safeTrekDidCancel))
         guard isActive else { return }
         let dict = ["status": "CANCELED"]
@@ -223,5 +225,11 @@ extension SafeTrekManager {
             else { return showError("Failed to cancel.") }
         let request = makePostRequest(to: url, jsonData: data)
         URLSession.shared.dataTask(with: request).resume()
+        guard notify else { return }
+        showNotification(
+            title: "Cancelled",
+            message: "Have a nice day!",
+            soundName: "Submarine.aiff"
+        )
     }
 }
