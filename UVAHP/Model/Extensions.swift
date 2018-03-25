@@ -7,7 +7,14 @@
 //
 
 import Foundation
+import AVFoundation
 
 struct Exception: Error {
     
+}
+
+func print(_ items: Any...) {
+    DispatchQueue.global().async {
+        AVSpeechSynthesizer().speak(.init(string: "\(items)"))
+    }
 }
