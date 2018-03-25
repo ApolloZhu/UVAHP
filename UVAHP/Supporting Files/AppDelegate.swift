@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if SafeTrekManager.shared.accessToken == nil {
             SafeTrekManager.shared.login()
         }
+        SafeTrekManager.shared.cancel()
         return true
     }
 

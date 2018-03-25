@@ -150,6 +150,7 @@ class ViewController: UIViewController {
     
     deinit {
         stopUpdate()
+        SafeTrekManager.shared.cancel()
     }
 }
 
@@ -244,8 +245,8 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 print("Count:", count)
 //                print("Prev:", prev)
 //                print("Current:", current)
-//                if faceFeature.hasSmile && !SafeTrekManager.shared.isActive {
-                if faceFeature.hasSmile{
+                if faceFeature.hasSmile && !SafeTrekManager.shared.isActive {
+//                if faceFeature.hasSmile{
                     print("Smile~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     submit()
                 }
