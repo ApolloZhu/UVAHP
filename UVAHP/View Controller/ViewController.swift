@@ -282,11 +282,11 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     if count >= limit {
                         // call function pass in current
                         print("Action")
-                        if current == 0 && isFireSelected { //righteye
+                        if current == 0 && isFireSelected { //lefteye <- based on user eye
                             print("FireButton")
                             ui { self.didTapFireButton() }
                         }
-                        else if current == 1 && isPoliceSelected { //lefteye
+                        else if current == 1 && isPoliceSelected { //righteye <- based on user eye
                             print("PoliceButton")
                             ui { self.didTapPoliceButton() }
                         } else if current == 2 && isAmbulanceSelected { //botheye
@@ -309,6 +309,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     func outputSignals(face: CIFaceFeature) -> Int{
+        //Everything based on ImageFeatures
         //Ambulance
         if face.rightEyeClosed && face.leftEyeClosed{
             print("Both")
