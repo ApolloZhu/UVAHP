@@ -156,9 +156,9 @@ class ViewController: UIViewController {
             startUpdate()
             SafeTrekManager.shared.triggerAlarm(
                 services: Services(
-                    police: policeButton.isSelected,
-                    fire: fireButton.isSelected,
-                    medical: ambulanceButton.isSelected
+                    police: isPoliceSelected,
+                    fire: isFireSelected,
+                    medical: isAmbulanceSelected
                 ), location: locationManager.location!
             )
         } else { cancel() }
@@ -236,7 +236,8 @@ extension ViewController: CLLocationManagerDelegate {
     }
     
     func startUpdate() {
-        if CLLocationManager.locationServicesEnabled() {
+        if CLLocationManager.locationServicesEnabled()
+        && CLLocationManager.authorizationStatus() == .authorized {
             locationManager.startUpdatingLocation()
         } else {
             requestAuthorization()

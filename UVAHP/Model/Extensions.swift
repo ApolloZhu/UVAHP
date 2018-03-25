@@ -23,6 +23,7 @@ func showError(_ message: String) {
     let content = UNMutableNotificationContent()
     content.title = "Something Went Wrong"
     content.body = message
-    let request = UNNotificationRequest.init(identifier: message, content: content, trigger: nil)
+    let request = UNNotificationRequest(identifier: message,
+                                        content: content, trigger: nil)
     center.add(request, withCompletionHandler: nil)
 }
