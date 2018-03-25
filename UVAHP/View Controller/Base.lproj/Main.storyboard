@@ -104,10 +104,11 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7nW-vu-C1f">
-                                        <rect key="frame" x="36.5" y="159" width="302" height="150.5"/>
+                                        <rect key="frame" x="37" y="159" width="301.5" height="150.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="2:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
                                         </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <state key="normal" title="Submit"/>
                                         <connections>
                                             <action selector="submit" destination="BYZ-38-t0r" eventType="touchUpInside" id="hpK-8y-ufa"/>
