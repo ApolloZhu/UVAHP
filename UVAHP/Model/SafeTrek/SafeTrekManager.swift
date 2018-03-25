@@ -64,6 +64,7 @@ extension SafeTrekManager {
     }
 
     public func triggerAlarm(services: Services, location: CodableLocation) {
+        guard !isActive else { return updateLocation(to: location) }
         let alarm = Alarm(services: services, location: location)
         guard let data = try? JSONEncoder().encode(alarm)
             , let url = URL(string: "https://api-sandbox.safetrek.io/v1/alarms")
