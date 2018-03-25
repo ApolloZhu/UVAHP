@@ -13,6 +13,11 @@ import CoreLocation
 import GoogleMaps
 import UserNotifications
 
+extension String {
+    static let submit = "Submit 😀"
+    static let cancel = "Cancel"
+}
+
 class ViewController: UIViewController {
     lazy var locationManager: CLLocationManager = {
         $0.delegate = self
@@ -93,25 +98,37 @@ class ViewController: UIViewController {
             }
         }
     }
+
+    var someServicesSelected: Bool {
+        return buttons.reduce(false) { $0 || $1.isSelected }
+    }
     
     // MARK: - Actions
+
+    func enableSubmitIfPossible() {
+        if !someServicesSelected { submitButton.isEnabled = false }
+        else { submitButton.isEnabled = true }
+    }
     
     @IBAction func didTapFireButton() {
         if !isButtonsEnabled { return }
         isFireSelected.toggle()
         speak("Fire Department " + (isFireSelected ? "Selected" : "Deeselected"))
+        enableSubmitIfPossible()
     }
     
     @IBAction func didTapAmbulanceButton() {
         if !isButtonsEnabled { return }
         isAmbulanceSelected.toggle()
         speak("Ambulance " + (isAmbulanceSelected ? "Selected" : "Deeselected"))
+        enableSubmitIfPossible()
     }
     
     @IBAction func didTapPoliceButton() {
         if !isButtonsEnabled { return }
         isPoliceSelected.toggle()
         speak("Police " + (isPoliceSelected ? "Selected" : "Deeselected"))
+        enableSubmitIfPossible()
     }
     
     var services: Services {
@@ -124,21 +141,21 @@ class ViewController: UIViewController {
     
     @IBAction func submit() {
         switch submitButton.currentTitle {
-        case "Submit"?:
+        case .submit?:
             forceSubmit()
-        case "Cancel":
+        case .cancel?:
             cancel()
         default:
             resetTimer()
             cancel()
-            submitButton.setTitle("Submit", for: .normal)
+            submitButton.setTitle(.submit, for: .normal)
         }
     }
     
     private func forceSubmit() {
         isButtonsEnabled = false
         smiled = true
-        submitButton.setTitle("Cancel", for: .normal)
+        submitButton.setTitle(.cancel, for: .normal)
         startUpdate()
         if let loc = locationManager.location {
             SafeTrekManager.shared.triggerAlarm(
@@ -155,7 +172,7 @@ class ViewController: UIViewController {
         stopUpdate()
         UNUserNotificationCenter.current()
             .removeAllDeliveredNotifications()
-        submitButton.setTitle("Submit", for: .normal)
+        submitButton.setTitle(.submit, for: .normal)
         smiled = false
         isButtonsEnabled = true
     }
@@ -206,7 +223,7 @@ extension ViewController: CLLocationManagerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if SafeTrekManager.shared.isActive {
-            submitButton.setTitle("Cancel", for: .normal)
+            submitButton.setTitle(.cancel, for: .normal)
         } else {
             cancel(notify: false)
         }
@@ -242,7 +259,7 @@ extension ViewController: CLLocationManagerDelegate {
             SafeTrekManager.shared.updateLocation(to: userLocation)
         } else {
             ui {
-                guard self.submitButton.currentTitle == "Cancel" else { return }
+                guard self.submitButton.currentTitle == .cancel else { return }
                 SafeTrekManager.shared.triggerAlarm(
                     services: self.services,
                     location: userLocation
@@ -276,7 +293,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let current = outputSignals(face :faceFeature)
                 if faceFeature.hasSmile && smiled == false {
                     smilecount += 1
-                    if smilecount >= limit{
+                    if smilecount >= limit && submitButton.isEnabled {
                         startCountDown()
                     }
                 }
@@ -330,7 +347,7 @@ extension ViewController {
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
                 guard 0 != counter else {
                     self?.resetTimer()
-                    if self?.submitButton.currentTitle != "Cancel" {
+                    if self?.submitButton.currentTitle != .cancel {
                         self?.forceSubmit()
                     }
                     return
