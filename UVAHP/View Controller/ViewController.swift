@@ -69,6 +69,7 @@ class ViewController: UIViewController {
         get { return policeButton.isSelected }
         set { policeButton.isSelected = newValue }
     }
+    @IBOutlet var buttons: [UIButton]!
     @IBOutlet weak var submitButton: UIButton! {
         didSet {
             submitButton?.setNeedsLayout()
@@ -85,30 +86,29 @@ class ViewController: UIViewController {
     var isButtonsEnabled: Bool {
         get { return fireButton.isEnabled }
         set {
-            fireButton.isEnabled = newValue
-            ambulanceButton.isEnabled = newValue
-            policeButton.isEnabled = newValue
+            for button in buttons {
+                button.isEnabled = newValue
+                button.alpha = newValue ? 1 : 0.5
+            }
         }
     }
     
     // MARK: - Actions
     
     @IBAction func didTapFireButton() {
+        if !isButtonsEnabled { return }
         isFireSelected.toggle()
-        if isFireSelected {
-            speak("Fire Department and Ambulance Selected")
-            isAmbulanceSelected = true
-        } else {
-            speak("Fire Department Deeselected")
-        }
+        speak("Fire Department " + (isFireSelected ? "Selected" : "Deeselected"))
     }
     
     @IBAction func didTapAmbulanceButton() {
+        if !isButtonsEnabled { return }
         isAmbulanceSelected.toggle()
         speak("Ambulance " + (isAmbulanceSelected ? "Selected" : "Deeselected"))
     }
     
     @IBAction func didTapPoliceButton() {
+        if !isButtonsEnabled { return }
         isPoliceSelected.toggle()
         speak("Police " + (isPoliceSelected ? "Selected" : "Deeselected"))
     }
@@ -124,7 +124,6 @@ class ViewController: UIViewController {
     @IBAction func submit() {
         switch submitButton.currentTitle {
         case "Submit"?:
-            isButtonsEnabled = false
             forceSubmit()
         case "Cancel":
             cancel()
@@ -136,6 +135,7 @@ class ViewController: UIViewController {
     }
     
     private func forceSubmit() {
+        isButtonsEnabled = false
         smiled = true
         submitButton.setTitle("Cancel", for: .normal)
         startUpdate()
@@ -152,7 +152,8 @@ class ViewController: UIViewController {
     
     @objc private func cancelUI() {
         stopUpdate()
-        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        UNUserNotificationCenter.current()
+            .removeAllDeliveredNotifications()
         submitButton.setTitle("Submit", for: .normal)
         smiled = false
         isButtonsEnabled = true

@@ -153,6 +153,9 @@
                         <outlet property="mapView" destination="APq-vH-8Wj" id="XKz-e1-VYn"/>
                         <outlet property="policeButton" destination="YCN-b7-AeK" id="pVf-Rh-Par"/>
                         <outlet property="submitButton" destination="7nW-vu-C1f" id="00D-O5-sPG"/>
+                        <outletCollection property="buttons" destination="WVB-fp-Rnp" collectionClass="NSMutableArray" id="RTz-Rt-9co"/>
+                        <outletCollection property="buttons" destination="DQV-Z6-jUb" collectionClass="NSMutableArray" id="ZPa-3Z-0ee"/>
+                        <outletCollection property="buttons" destination="YCN-b7-AeK" collectionClass="NSMutableArray" id="0Mg-Zb-Bfe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
