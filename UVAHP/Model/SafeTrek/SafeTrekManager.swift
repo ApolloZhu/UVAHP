@@ -51,7 +51,15 @@ extension SafeTrekManager {
 }
 
 extension SafeTrekManager {
-    public func triggerAlarm(services: Services, location: LocationConvertible) {
+    public func triggerAlarm(services: Services, location: CoordinatesConvertible & AddressConvertible) {
+        triggerAlarm(services: services, location: location.coordinates ?? location.address)
+    }
+
+    public func triggerAlarm(services: Services, location: AddressConvertible) {
+        triggerAlarm(services: services, location: location.address)
+    }
+
+    public func triggerAlarm(services: Services, location: CoordinatesConvertible) {
         triggerAlarm(services: services, location: location.coordinates)
     }
 
@@ -80,6 +88,7 @@ struct Services: Codable {
 }
 
 protocol Location { }
+
 typealias CodableLocation = Location & Codable
 
 struct Coordinates: CodableLocation {
@@ -88,25 +97,8 @@ struct Coordinates: CodableLocation {
     var accuracy: Int
 }
 
-protocol LocationConvertible {
-    var coordinates: Coordinates { get }
-}
-
-extension CLLocationCoordinate2D: LocationConvertible {
-    var coordinates: Coordinates {
-        return Coordinates.init(lat: latitude, lng: longitude, accuracy: 0)
-    }
-}
-
-extension CLLocation: LocationConvertible {
-    var coordinates: Coordinates {
-        var coord = coordinate.coordinates
-        coord.accuracy = Int(
-            sqrt(pow(horizontalAccuracy, 2)
-            + pow(verticalAccuracy, 2))
-        )
-        return coord
-    }
+protocol CoordinatesConvertible {
+    var coordinates: Coordinates! { get }
 }
 
 struct Address: CodableLocation {
@@ -115,6 +107,59 @@ struct Address: CodableLocation {
     let city: String
     let state: String
     let zip: String
+}
+
+protocol AddressConvertible {
+    var address: Address! { get }
+}
+
+extension CLLocationCoordinate2D: CoordinatesConvertible {
+    var coordinates: Coordinates! {
+        return Coordinates(lat: latitude, lng: longitude, accuracy: 0)
+    }
+}
+
+extension CLLocation: CoordinatesConvertible {
+    var coordinates: Coordinates! {
+        var coord = coordinate.coordinates!
+        coord.accuracy = Int(
+            sqrt(pow(horizontalAccuracy, 2)
+            + pow(verticalAccuracy, 2))
+        )
+        return coord
+    }
+}
+
+extension CLLocation {
+    var placemark: CLPlacemark? {
+        var result: CLPlacemark? = nil
+        let group = DispatchGroup()
+        group.enter()
+        CLGeocoder().reverseGeocodeLocation(self) { (marks, err) in
+            result = marks?.first
+            group.leave()
+        }
+        group.wait()
+        return result
+    }
+}
+
+extension CLPlacemark: CoordinatesConvertible, AddressConvertible {
+    var coordinates: Coordinates! {
+        return location?.coordinates
+    }
+
+    var address: Address! {
+        let info = [thoroughfare, subThoroughfare, locality, administrativeArea, postalCode]
+        guard info.first(where: { $0 != nil }) != nil else { return nil }
+        return Address(
+            line1: info[0] ?? "",
+            line2: info[1] ?? "",
+            city: info[2] ?? "",
+            state: info[3] ?? "",
+            zip: info[4] ?? ""
+        )
+    }
 }
 
 struct Alarm {
@@ -160,9 +205,18 @@ extension SafeTrekManager {
 }
 
 extension SafeTrekManager {
-    public func updateLocation(to newLocation: LocationConvertible) {
+    public func updateLocation(to newLocation: CoordinatesConvertible & AddressConvertible) {
+        updateLocation(to: newLocation.coordinates ?? newLocation.address)
+    }
+
+    public func updateLocation(to newLocation: CoordinatesConvertible) {
         updateLocation(to: newLocation.coordinates)
     }
+
+    public func updateLocation(to newLocation: AddressConvertible) {
+        updateLocation(to: newLocation.address)
+    }
+
     public func updateLocation(to newLocation: CodableLocation) {
         let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm ?? "")/locations"
         let data: Data?
