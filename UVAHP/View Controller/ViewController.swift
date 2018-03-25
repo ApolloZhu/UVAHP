@@ -10,6 +10,7 @@
 import UIKit
 import AVFoundation
 import CoreLocation
+import MapKit
 
 class DetailsView: UIView {
     
@@ -47,13 +48,14 @@ class ViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         return locationManager
     }()
-
+    
     lazy var session: AVCaptureSession = .init()
     var stillOutput = AVCaptureStillImageOutput()
     var borderLayer: CAShapeLayer?
     let limit = 40
     var count = 0
     var prev = -1
+    var setCalls = Set<Int>()
     
     let detailsView: DetailsView = {
         let detailsView = DetailsView()
@@ -82,26 +84,79 @@ class ViewController: UIViewController {
         previewLayer?.frame = view.frame
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        guard let previewLayer = previewLayer else { return }
-//
-//        view.layer.addSublayer(previewLayer)
-//        view.addSubview(detailsView)
-//        view.bringSubview(toFront: detailsView)
-//    }
+    //    override func viewDidAppear(_ animated: Bool) {
+    //        super.viewDidAppear(animated)
+    //        guard let previewLayer = previewLayer else { return }
+    //
+    //        view.layer.addSublayer(previewLayer)
+    //        view.addSubview(detailsView)
+    //        view.bringSubview(toFront: detailsView)
+    //    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         sessionPrepare()
         session.startRunning()
     }
+    
+    @IBOutlet weak var fireButton: UIButton!
+    @IBOutlet weak var ambulanceButton: UIButton!
+    @IBOutlet weak var policeButton: UIButton!
+    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var mapView: MKMapView! {
+        didSet {
+            mapView?.setUserTrackingMode(.follow, animated: true)
+            mapView?.showsUserLocation = true
+        }
+    }
+    
+    
+    @IBAction func didTapFireButton() {
+        fireButton.isSelected = !fireButton.isSelected
+        if fireButton.isSelected {
+            ambulanceButton.isSelected = true
+        }
+    }
+    
+    @IBAction func didTapAmbulanceButton() {
+        ambulanceButton.isSelected = !ambulanceButton.isSelected
+    }
+    
+    @IBAction func didTapPoliceButton() {
+        policeButton.isSelected = !policeButton.isSelected
+    }
+    
+    @IBAction func submit() {
+        if submitButton.currentTitle == "Submit" {
+            submitButton.setTitle("Cancel", for: .normal)
+            startUpdate()
+            SafeTrekManager.shared.triggerAlarm(
+                services: Services(
+                    police: policeButton.isSelected,
+                    fire: fireButton.isSelected,
+                    medical: ambulanceButton.isSelected
+                ), location: locationManager.location!
+            )
+        } else {
+            stopUpdate()
+            SafeTrekManager.shared.cancel()
+            submitButton.setTitle("Submit", for: .normal)
+        }
+    }
+    
+    func stopUpdate() {
+        locationManager.stopUpdatingLocation()
+    }
+    
+    deinit {
+        stopUpdate()
+    }
 }
+
 
 let queue = DispatchQueue(label: "output.queue")
 
 extension ViewController: CLLocationManagerDelegate {
-    
     func sessionPrepare() {
         guard let captureDevice = frontCamera else { return }
         
@@ -128,11 +183,10 @@ extension ViewController: CLLocationManagerDelegate {
         session.commitConfiguration()
         
     }
-
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         requestAuthorization()
     }
     
@@ -142,33 +196,26 @@ extension ViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        startUpdate()
+    }
+    
+    func startUpdate() {
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
-            //locationManager.startUpdatingHeading()
+        } else {
+            requestAuthorization()
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation = locations[0]
-        
-        // Call stopUpdatingLocation() to stop listening for location updates,
-        // other wise this function will be called every time when user location changes.
-        
-        // manager.stopUpdatingLocation()
-        print("user latitude = \(userLocation.coordinate.latitude)")
-        print("user longitude = \(userLocation.coordinate.longitude)")
-//        return userLocation.coordinate.latitude;, userLocation.coordinate.longitude
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
-    {
-        print("Error \(error)")
+        SafeTrekManager.shared.updateLocation(to: userLocation)
     }
 }
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-
+        
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
         let ciImage = CIImage(cvImageBuffer: pixelBuffer!, options: attachments as! [String : Any]?)
@@ -189,23 +236,25 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     "has closed left eye: \(faceFeature.leftEyeClosed)",
                     "has closed right eye: \(faceFeature.rightEyeClosed)"]
                 update(with: faceRect, text: featureDetails.joined(separator: "\n"))
-//                print("has smile: \(faceFeature.hasSmile)",
-//                    "has closed left eye: \(faceFeature.leftEyeClosed)",
-//                    "has closed right eye: \(faceFeature.rightEyeClosed)")
-//                interpretSignals(face :faceFeature)
+                //                print("has smile: \(faceFeature.hasSmile)",
+                //                    "has closed left eye: \(faceFeature.leftEyeClosed)",
+                //                    "has closed right eye: \(faceFeature.rightEyeClosed)")
+                //                interpretSignals(face :faceFeature)
                 let current = outputSignals(face :faceFeature)
                 print("Count:", count)
                 print("Prev:", prev)
                 print("Current:", current)
-                if prev != current{
+                if faceFeature.hasSmile {
+                    submit()
+                }
+                if prev != current {
                     count = 0
                     print("Inaction")
-                }
-                else if prev == current && prev != -1{
-                    if count >= limit{
+                } else if prev == current && prev != -1 {
+                    if count >= limit {
                         // call function pass in current
                         print("Action")
-                        interpretSignals()
+                        submit()
                         count = 0
                     }
                     count += 1
@@ -221,23 +270,18 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
     
-    func interpretSignals(){
-        requestAuthorization()
-//        SafeTrekManager.shared.triggerAlarm(services: <#T##Services#>, location: CodableLocation)
-    }
-    
     func outputSignals(face: CIFaceFeature) -> Int{
         //Ambulance
         if face.rightEyeClosed && face.leftEyeClosed{
             print("Both")
             return 2
         }
-        //Police
+            //Police
         else if face.leftEyeClosed{
             print("Left")
             return 1
         }
-        //Fire
+            //Fire
         else if face.rightEyeClosed{
             print("Right")
             return 0

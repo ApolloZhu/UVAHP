@@ -26,35 +26,41 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wch-JR-BkU">
                                 <rect key="frame" x="0.0" y="341.5" width="375" height="309.5"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vm7-Oa-PDJ">
-                                        <rect key="frame" x="52" y="0.0" width="271" height="55.5"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="8fz-Eo-r9C">
+                                        <rect key="frame" x="19.5" y="0.0" width="336" height="151"/>
                                         <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="This will be replaced by actual address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hw5-P7-kuT">
-                                                <rect key="frame" x="0.0" y="0.0" width="271" height="55.5"/>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCN-b7-AeK">
+                                                <rect key="frame" x="0.0" y="0.0" width="112" height="151"/>
+                                                <state key="normal" title="Police"/>
+                                                <connections>
+                                                    <action selector="didTapPoliceButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="nAN-i1-xoq"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WVB-fp-Rnp">
+                                                <rect key="frame" x="112" y="0.0" width="112" height="151"/>
+                                                <state key="normal" title="Fire Department"/>
+                                                <connections>
+                                                    <action selector="didTapFireButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="684-7j-hxs"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DQV-Z6-jUb">
+                                                <rect key="frame" x="224" y="0.0" width="112" height="151"/>
+                                                <state key="normal" title="Ambulance"/>
+                                                <connections>
+                                                    <action selector="didTapAmbulanceButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="PJV-L9-db7"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DQV-Z6-jUb">
-                                        <rect key="frame" x="149" y="63.5" width="77" height="55.5"/>
-                                        <state key="normal" title="Ambulance"/>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WVB-fp-Rnp">
-                                        <rect key="frame" x="131.5" y="127" width="112" height="55.5"/>
-                                        <state key="normal" title="Fire Department"/>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCN-b7-AeK">
-                                        <rect key="frame" x="166.5" y="190.5" width="42" height="55.5"/>
-                                        <state key="normal" title="Police"/>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7nW-vu-C1f">
-                                        <rect key="frame" x="132" y="254" width="111" height="55.5"/>
+                                        <rect key="frame" x="36.5" y="159" width="302" height="150.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="2:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
                                         </constraints>
-                                        <state key="normal" title="Help Me!"/>
+                                        <state key="normal" title="Submit"/>
+                                        <connections>
+                                            <action selector="submit" destination="BYZ-38-t0r" eventType="touchUpInside" id="hpK-8y-ufa"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -73,6 +79,13 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Report Emergency" id="Yxt-l0-iia"/>
+                    <connections>
+                        <outlet property="ambulanceButton" destination="DQV-Z6-jUb" id="ryr-IU-Y51"/>
+                        <outlet property="fireButton" destination="WVB-fp-Rnp" id="Hn1-hN-lkW"/>
+                        <outlet property="mapView" destination="6dD-v7-JyZ" id="nRO-6b-8iT"/>
+                        <outlet property="policeButton" destination="YCN-b7-AeK" id="pVf-Rh-Par"/>
+                        <outlet property="submitButton" destination="7nW-vu-C1f" id="00D-O5-sPG"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
