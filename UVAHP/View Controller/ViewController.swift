@@ -146,6 +146,14 @@ class ViewController: UIViewController {
     @IBAction func didTapPoliceButton() {
         policeButton.isSelected = !policeButton.isSelected
     }
+
+    var services: Services {
+        return Services(
+            police: isPoliceSelected,
+            fire: isFireSelected,
+            medical: isAmbulanceSelected
+        )
+    }
     
     @IBAction func submit() {
         if submitButton.currentTitle == "Submit" {
@@ -154,13 +162,11 @@ class ViewController: UIViewController {
             submitButton.setTitle("Cancel", for: .normal)
             print("Smile-Set title to cancel")
             startUpdate()
-            SafeTrekManager.shared.triggerAlarm(
-                services: Services(
-                    police: isPoliceSelected,
-                    fire: isFireSelected,
-                    medical: isAmbulanceSelected
-                ), location: locationManager.location!
-            )
+            if let loc = locationManager.location {
+                SafeTrekManager.shared.triggerAlarm(
+                    services: services, location: loc
+                )
+            }
         } else { cancel() }
     }
 
@@ -246,7 +252,16 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation = locations[0]
-        SafeTrekManager.shared.updateLocation(to: userLocation)
+        if SafeTrekManager.shared.isActive {
+            SafeTrekManager.shared.updateLocation(to: userLocation)
+        } else {
+            ui {
+                SafeTrekManager.shared.triggerAlarm(
+                    services: self.services,
+                    location: userLocation
+                )
+            }
+        }
     }
 }
 
