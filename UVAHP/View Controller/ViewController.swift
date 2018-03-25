@@ -85,7 +85,7 @@ class ViewController: UIViewController {
     
     let faceDetector = CIDetector(
         ofType: CIDetectorTypeFace, context: nil,
-        options: [CIDetectorAccuracy : CIDetectorAccuracyHigh]
+        options: [CIDetectorAccuracy : CIDetectorAccuracyLow]
     )
     
     override func viewDidLayoutSubviews() {
