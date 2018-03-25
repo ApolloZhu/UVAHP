@@ -13,14 +13,10 @@ import UIKit
 
 struct Exception: Error { }
 
-
 let speaker = AVSpeechSynthesizer()
 
 func speak(_ content: String) {
-    DispatchQueue.global().async {
-        speaker.stopSpeaking(at: .immediate)
-        speaker.speak(.init(string: content))
-    }
+    speaker.speak(.init(string: content))
 }
 
 func showError(_ message: String) {

@@ -82,6 +82,15 @@ class ViewController: UIViewController {
         }
     }
     
+    var isButtonsEnabled: Bool {
+        get { return fireButton.isEnabled }
+        set {
+            fireButton.isEnabled = newValue
+            ambulanceButton.isEnabled = newValue
+            policeButton.isEnabled = newValue
+        }
+    }
+    
     // MARK: - Actions
     
     @IBAction func didTapFireButton() {
@@ -115,6 +124,7 @@ class ViewController: UIViewController {
     @IBAction func submit() {
         switch submitButton.currentTitle {
         case "Submit"?:
+            isButtonsEnabled = false
             forceSubmit()
         case "Cancel":
             cancel()
@@ -145,7 +155,7 @@ class ViewController: UIViewController {
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         submitButton.setTitle("Submit", for: .normal)
         smiled = false
-        speak("")
+        isButtonsEnabled = true
     }
     
     func stopUpdate() {
@@ -310,6 +320,7 @@ extension ViewController {
     }
     func startCountDown() {
         guard timer == nil else { return }
+        speak("Call services in")
         ui {
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
                 guard 0 != counter else {
@@ -323,6 +334,7 @@ extension ViewController {
                                animations: { [weak self] in
                                 self?.submitButton?.titleLabel?.transform = .init(scaleX: 1.2, y: 1.2)
                                 self?.submitButton?.setTitle("\(counter)", for: .normal)
+                                speak("\(counter)")
                                 counter -= 1
                     }, completion: { [weak self] _ in
                         self?.submitButton?.titleLabel?.transform = .identity

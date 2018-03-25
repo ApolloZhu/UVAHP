@@ -50,6 +50,9 @@
                                                         </fragment>
                                                     </attributedString>
                                                 </state>
+                                                <state key="disabled">
+                                                    <attributedString key="attributedTitle"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="didTapFireButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="684-7j-hxs"/>
                                                 </connections>
@@ -74,6 +77,9 @@
                                                         </fragment>
                                                     </attributedString>
                                                 </state>
+                                                <state key="disabled">
+                                                    <attributedString key="attributedTitle"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="didTapAmbulanceButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="PJV-L9-db7"/>
                                                 </connections>
@@ -97,6 +103,9 @@
                                                             </attributes>
                                                         </fragment>
                                                     </attributedString>
+                                                </state>
+                                                <state key="disabled">
+                                                    <attributedString key="attributedTitle"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="didTapPoliceButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="nAN-i1-xoq"/>
