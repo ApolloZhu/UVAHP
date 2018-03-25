@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     lazy var session: AVCaptureSession = .init()
     let limit = 25
     var count = 0
+    var smilecount = 0
     var prev = -1
     
     lazy var previewLayer: AVCaptureVideoPreviewLayer? = {
@@ -274,7 +275,10 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             if let faceFeature = feature as? CIFaceFeature {
                 let current = outputSignals(face :faceFeature)
                 if faceFeature.hasSmile && smiled == false {
-                    startCountDown()
+                    smilecount += 1
+                    if smilecount >= limit{
+                        startCountDown()
+                    }
                 }
                 if prev != current {
                     count = 0

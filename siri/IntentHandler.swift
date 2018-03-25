@@ -17,7 +17,7 @@ import Intents
 // "EyeAlert John saying hello"
 // "Search for messages in EyeAlert"
 
-let cancelKeywords = ["cancel", "stop", "give up", "done", "resolved", "nevermind", "never mind"]
+let cancelKeywords = ["ok", "cancel", "stop", "give up", "done", "resolved", "nevermind", "never mind"]
 
 extension INPerson {
     convenience init(name: String) {
