@@ -41,7 +41,7 @@
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                             </attributes>
                                                         </fragment>
-                                                        <fragment content="(Close Left Eye)">
+                                                        <fragment content="(Close Right Eye)">
                                                             <attributes>
                                                                 <font key="NSFont" size="10" name=".AppleSystemUIFont"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
@@ -65,7 +65,7 @@
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                             </attributes>
                                                         </fragment>
-                                                        <fragment content="(Close Right Eye)">
+                                                        <fragment content="(Close Left Eye)">
                                                             <attributes>
                                                                 <font key="NSFont" size="10" name=".AppleSystemUIFont"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
@@ -104,7 +104,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7nW-vu-C1f">
-                                        <rect key="frame" x="37" y="159" width="301.5" height="150.5"/>
+                                        <rect key="frame" x="36.5" y="159" width="302" height="150.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="2:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
                                         </constraints>

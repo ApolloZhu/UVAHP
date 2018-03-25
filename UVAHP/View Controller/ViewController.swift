@@ -85,7 +85,7 @@ class ViewController: UIViewController {
     
     let faceDetector = CIDetector(
         ofType: CIDetectorTypeFace, context: nil,
-        options: [CIDetectorAccuracy : CIDetectorAccuracyHigh]
+        options: [CIDetectorAccuracy : CIDetectorAccuracyLow]
     )
     
     override func viewDidLayoutSubviews() {
@@ -136,15 +136,32 @@ class ViewController: UIViewController {
         fireButton.isSelected = !fireButton.isSelected
         if fireButton.isSelected {
             ambulanceButton.isSelected = true
+            speak("Fire Department Selected")
+        }
+        else{
+            speak("Fire Department Not Selected")
         }
     }
     
     @IBAction func didTapAmbulanceButton() {
         ambulanceButton.isSelected = !ambulanceButton.isSelected
+        if ambulanceButton.isSelected {
+            speak("Ambulance Selected")
+        }
+        else{
+            speak("Ambulance Not Selected")
+        }
     }
     
     @IBAction func didTapPoliceButton() {
         policeButton.isSelected = !policeButton.isSelected
+        if policeButton.isSelected {
+            speak("Police Selected")
+        }
+        else{
+            speak("Police Not Selected")
+        }
+        
     }
 
     var services: Services {
@@ -158,9 +175,9 @@ class ViewController: UIViewController {
     @IBAction func submit() {
         if submitButton.currentTitle == "Submit" {
             smiled = true
-            print("Smile-Submit")
+//            print("Smile-Submit")
             submitButton.setTitle("Cancel", for: .normal)
-            print("Smile-Set title to cancel")
+//            print("Smile-Set title to cancel")
             startUpdate()
             if let loc = locationManager.location {
                 SafeTrekManager.shared.triggerAlarm(
@@ -296,26 +313,26 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let current = outputSignals(face :faceFeature)
                 print("Count:", count)
                 if faceFeature.hasSmile && smiled == false {
-                    print("Smile")
+//                    print("Smile")
                     ui { self.submit() }
                 }
                 if prev != current {
                     count = 0
-                    print("Inaction")
+//                    print("Inaction")
                 } else if prev == current && prev != -1 {
                     if count >= limit {
                         // call function pass in current
                         ui {
-                            print("Action")
+//                            print("Action")
                             if current == 0 && self.isFireSelected { //lefteye <- based on user eye
-                                print("FireButton")
+//                                print("FireButton")
                                 self.didTapFireButton()
                             }
                             else if current == 1 && self.isPoliceSelected { //righteye <- based on user eye
-                                print("PoliceButton")
+//                                print("PoliceButton")
                                 self.didTapPoliceButton()
                             } else if current == 2 && self.isAmbulanceSelected { //botheye
-                                print("AmbulanceButton")
+//                                print("AmbulanceButton")
                                 self.didTapAmbulanceButton()
                             }
                             self.count = 0
@@ -338,17 +355,17 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         //Everything based on ImageFeatures
         //Ambulance
         if face.rightEyeClosed && face.leftEyeClosed{
-            print("Both")
+//            print("Both")
             return 2
         }
             //Police
         else if face.leftEyeClosed{
-            print("Left")
+//            print("Left")
             return 1
         }
             //Fire
         else if face.rightEyeClosed{
-            print("Right")
+//            print("Right")
             return 0
         }
         return -1
