@@ -148,6 +148,9 @@ class ViewController: UIViewController {
             submitButton.setTitle("Cancel", for: .normal)
             print("Smile-Set title to cancel")
             startUpdate()
+            locationManager.location!.fetchStatistics {
+                print($0 ?? "Nothing Found")
+            }
             SafeTrekManager.shared.triggerAlarm(
                 services: Services(
                     police: policeButton.isSelected,

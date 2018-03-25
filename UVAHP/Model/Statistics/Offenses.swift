@@ -15,10 +15,12 @@ extension CLLocation {
     func fetchStatistics(_ process: @escaping ([OffenseResponse.Results]?) -> Void) {
         fetchFIPS { (state, fips) in
             guard let state = state, let fips = fips else { return process(nil) }
+            print(state, fips, self.coordinate)
             let url = URL(string: "https://api.usa.gov/crime/fbi/ucr/agencies/count/states/offenses/\(state)/counties/\(fips)?page=1&per_page=10&output=json&api_key=\(GOV)")!
             let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
                 guard let data = data
                     , let json = try? JSONDecoder().decode(OffenseResponse.self, from: data)
+                    , !json.results.isEmpty
                     else { return process(nil) }
                 process(json.results)
             }
