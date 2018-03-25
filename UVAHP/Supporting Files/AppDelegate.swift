@@ -21,8 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SafeTrekManager.shared.login()
         }
         SafeTrekManager.shared.cancel()
-        UNUserNotificationCenter.current()
-            .requestAuthorization(options: [.alert, .badge, .sound])
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        center.requestAuthorization(options: [.alert, .badge, .sound])
         { (authorized, _) in
             print("Is authorized: \(authorized)")
         }
@@ -58,5 +59,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             else { return false }
         SafeTrekManager.shared.accessToken = item[0].value
         return true
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        switch response.actionIdentifier {
+        case "Cancel":
+            SafeTrekManager.shared.cancel()
+        default: break
+        }
+        completionHandler()
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge, .sound])
     }
 }
