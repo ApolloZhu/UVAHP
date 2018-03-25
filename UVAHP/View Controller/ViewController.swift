@@ -136,15 +136,32 @@ class ViewController: UIViewController {
         fireButton.isSelected = !fireButton.isSelected
         if fireButton.isSelected {
             ambulanceButton.isSelected = true
+            speak("Fire Department Selected")
+        }
+        else{
+            speak("Fire Department Not Selected")
         }
     }
     
     @IBAction func didTapAmbulanceButton() {
         ambulanceButton.isSelected = !ambulanceButton.isSelected
+        if ambulanceButton.isSelected {
+            speak("Ambulance Selected")
+        }
+        else{
+            speak("Ambulance Not Selected")
+        }
     }
     
     @IBAction func didTapPoliceButton() {
         policeButton.isSelected = !policeButton.isSelected
+        if policeButton.isSelected {
+            speak("Police Selected")
+        }
+        else{
+            speak("Police Not Selected")
+        }
+        
     }
     
     @IBAction func submit() {
