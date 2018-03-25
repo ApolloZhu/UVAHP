@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     lazy var session: AVCaptureSession = .init()
     var stillOutput = AVCaptureStillImageOutput()
     var borderLayer: CAShapeLayer?
-    let limit = 30
+    let limit = 5
     var count = 0
     var prev = -1
     var setCalls = Set<Int>()
@@ -128,7 +128,10 @@ class ViewController: UIViewController {
     
     @IBAction func submit() {
         if submitButton.currentTitle == "Submit" {
+            smiled = true
+            print("Smile-Submit")
             submitButton.setTitle("Cancel", for: .normal)
+            print("Smile-Set title to cancel")
             startUpdate()
             SafeTrekManager.shared.triggerAlarm(
                 services: Services(
@@ -138,9 +141,11 @@ class ViewController: UIViewController {
                 ), location: locationManager.location!
             )
         } else {
+            print("Smile-Cancel")
             stopUpdate()
             SafeTrekManager.shared.cancel()
             submitButton.setTitle("Submit", for: .normal)
+            smiled = false
         }
     }
     
@@ -214,6 +219,8 @@ extension ViewController: CLLocationManagerDelegate {
     }
 }
 
+var smiled = false
+
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
@@ -245,10 +252,12 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 print("Count:", count)
 //                print("Prev:", prev)
 //                print("Current:", current)
-                if faceFeature.hasSmile && !SafeTrekManager.shared.isActive {
+                if faceFeature.hasSmile && smiled == false {
 //                if faceFeature.hasSmile{
-                    print("Smile~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                    submit()
+                    print("Smile")
+                    DispatchQueue.main.async {
+                        self.submit()
+                    }
                 }
                 if prev != current {
                     count = 0
@@ -258,12 +267,15 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                         // call function pass in current
                         print("Action")
                         if current == 0{
+                            print("FireButton")
                             didTapFireButton()
                         }
                         else if current == 1{
+                            print("PoliceButton")
                             didTapPoliceButton()
                         }
                         else if current == 2{
+                            print("AmbulanceButton")
                             didTapAmbulanceButton()
                         }
                         count = 0
@@ -340,7 +352,6 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         } else {
             videoBox.origin.y = (size.height - frameSize.height) / 2.0
         }
-        print("")
         return videoBox
     }
     
