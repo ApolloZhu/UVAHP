@@ -4,17 +4,13 @@ PODS:
   - GoogleMaps/Base (2.6.0)
   - GoogleMaps/Maps (2.6.0):
     - GoogleMaps/Base
-  - GooglePlaces (2.6.0):
-    - GoogleMaps/Base (= 2.6.0)
 
 DEPENDENCIES:
   - GoogleMaps
-  - GooglePlaces
 
 SPEC CHECKSUMS:
   GoogleMaps: 42f91c68b7fa2f84d5c86597b18ceb99f5414c7f
-  GooglePlaces: f6ddf33b75cef69e888907d9947c57198ed845f3
 
-PODFILE CHECKSUM: 0f7f76f7a6877f9d503832955b97d82a13a5fbc5
+PODFILE CHECKSUM: 1757f27a1ed621e2a4a4a2530af5c8e777eabc53
 
 COCOAPODS: 1.4.0

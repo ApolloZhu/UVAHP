@@ -113,7 +113,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="1:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                 <state key="normal" title="Submit"/>
                                                 <connections>
                                                     <action selector="submit" destination="BYZ-38-t0r" eventType="touchUpInside" id="hpK-8y-ufa"/>

@@ -113,16 +113,27 @@ class ViewController: UIViewController {
     }
     
     @IBAction func submit() {
-        if submitButton.currentTitle == "Submit" {
-            smiled = true
-            submitButton.setTitle("Cancel", for: .normal)
-            startUpdate()
-            if let loc = locationManager.location {
-                SafeTrekManager.shared.triggerAlarm(
-                    services: services, location: loc
-                )
-            }
-        } else { cancel() }
+        switch submitButton.currentTitle {
+        case "Submit"?:
+            forceSubmit()
+        case "Cancel":
+            cancel()
+        default:
+            resetTimer()
+            cancel()
+            submitButton.setTitle("Submit", for: .normal)
+        }
+    }
+    
+    private func forceSubmit() {
+        smiled = true
+        submitButton.setTitle("Cancel", for: .normal)
+        startUpdate()
+        if let loc = locationManager.location {
+            SafeTrekManager.shared.triggerAlarm(
+                services: services, location: loc
+            )
+        }
     }
     
     private func cancel() {
@@ -209,8 +220,6 @@ extension ViewController: CLLocationManagerDelegate {
         }
     }
     
-    
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation = locations[0]
         let coord = userLocation.coordinate
@@ -254,8 +263,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             if let faceFeature = feature as? CIFaceFeature {
                 let current = outputSignals(face :faceFeature)
                 if faceFeature.hasSmile && smiled == false {
-                    speak("Smiled")
-                    ui { self.submit() }
+                    startCountDown()
                 }
                 if prev != current {
                     count = 0
@@ -289,9 +297,39 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         default: return -1
         }
     }
-    
-    
-    
+}
+
+var counter = 3
+var timer: Timer?
+
+extension ViewController {
+    func resetTimer() {
+        timer?.invalidate()
+        timer = nil
+        counter = 3
+    }
+    func startCountDown() {
+        guard timer == nil else { return }
+        ui {
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+                guard 0 != counter else {
+                    self?.resetTimer()
+                    if self?.submitButton.currentTitle != "Cancel" {
+                        self?.forceSubmit()
+                    }
+                    return
+                }
+                UIView.animate(withDuration: 0.2,
+                               animations: { [weak self] in
+                                self?.submitButton?.titleLabel?.transform = .init(scaleX: 1.2, y: 1.2)
+                                self?.submitButton?.setTitle("\(counter)", for: .normal)
+                                counter -= 1
+                    }, completion: { [weak self] _ in
+                        self?.submitButton?.titleLabel?.transform = .identity
+                })
+            }
+        }
+    }
 }
 
 extension UIDeviceOrientation {
