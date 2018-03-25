@@ -3,7 +3,7 @@
  platform :ios, '8.0'
  use_frameworks!
  
- target :'YourTarget' do
+ target :'UVAHP' do
      pod 'AWSAutoScaling'
      pod 'AWSCloudWatch'
      pod 'AWSCognito'
