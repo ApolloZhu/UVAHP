@@ -8,6 +8,7 @@
 
 import Foundation
 import AVFoundation
+import UserNotifications
 
 struct Exception: Error {
     
@@ -20,4 +21,13 @@ func print(_ items: Any...) {
         AVSpeechSynthesizer().speak(.init(string: "\(items)"))
         #endif
     }
+}
+
+func showError(_ message: String) {
+    let center = UNUserNotificationCenter.current()
+    let content = UNMutableNotificationContent()
+    content.title = "Something Went Wrong"
+    content.body = message
+    let request = UNNotificationRequest.init(identifier: message, content: content, trigger: nil)
+    center.add(request, withCompletionHandler: nil)
 }

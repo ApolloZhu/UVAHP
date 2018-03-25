@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreLocation
+import UserNotifications
 
 class SafeTrekManager {
     private init() { }
@@ -18,12 +19,12 @@ extension SafeTrekManager {
     public var isLoggedIn: Bool {
         return accessToken != nil
     }
-
+    
     public var accessToken: String? {
         get { return UserDefaults.standard.string(forKey: "accessToken") }
         set { UserDefaults.standard.set(newValue, forKey: "accessToken") }
     }
-
+    
     public func login() {
         let string = "https://account-sandbox.safetrek.io/authorize?"
             + "client_id=m5qXF5ztOdT4cdQtUbZT2grBhF187vw6&"
@@ -33,11 +34,9 @@ extension SafeTrekManager {
             + "redirect_uri=https://uvahp.herokuapp.com/callback"
         let url = string
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        UIApplication.shared.open(URL(string: url!)!,
-                                  options: [:],
-                                  completionHandler: nil)
+        UIApplication.shared.open(URL(string: url!)!)
     }
-
+    
     private func makePostRequest(to url: URL, jsonData: Data) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpBody = jsonData
@@ -52,17 +51,18 @@ extension SafeTrekManager {
 
 extension SafeTrekManager {
     public func triggerAlarm(services: Services, location: CoordinatesConvertible & AddressConvertible) {
-        triggerAlarm(services: services, location: location.coordinates ?? location.address)
+        triggerAlarm(services: services,
+                     location: location.coordinates ?? location.address)
     }
-
+    
     public func triggerAlarm(services: Services, location: AddressConvertible) {
         triggerAlarm(services: services, location: location.address)
     }
-
+    
     public func triggerAlarm(services: Services, location: CoordinatesConvertible) {
         triggerAlarm(services: services, location: location.coordinates)
     }
-
+    
     public func triggerAlarm(services: Services, location: CodableLocation) {
         print("Trigger")
         guard !isActive else { return updateLocation(to: location) }
@@ -76,8 +76,22 @@ extension SafeTrekManager {
             guard let data = data
                 , let extractor = try? JSONDecoder()
                     .decode(IDExtractor.self, from: data)
-                else { fatalError("Failed Create Alarm") }
+                else {
+                    return UIApplication.shared.open(URL(string: "telprompt:911")!)
+            }
             self.activeAlarm = extractor.id
+            let center = UNUserNotificationCenter.current()
+            let content = UNMutableNotificationContent()
+            content.title = "Incident Reported!"
+            content.body = "Be claim and wait for furthur instructions!"
+            let cancel = UNNotificationAction(identifier: "cancel", title: "Cancel", options: .destructive)
+            let category = UNNotificationCategory.init(identifier: "Category", actions: [cancel], intentIdentifiers: [], options: [])
+            center.setNotificationCategories([category])
+            content.categoryIdentifier = "Category"
+            let request = UNNotificationRequest(
+                identifier: "Submitted", content: content, trigger: nil
+            )
+            center.add(request, withCompletionHandler: nil)
         }
         task.resume()
     }
@@ -126,7 +140,7 @@ extension CLLocation: CoordinatesConvertible {
         var coord = coordinate.coordinates!
         coord.accuracy = Int(
             sqrt(pow(horizontalAccuracy, 2)
-            + pow(verticalAccuracy, 2))
+                + pow(verticalAccuracy, 2))
         )
         return coord
     }
@@ -150,7 +164,7 @@ extension CLPlacemark: CoordinatesConvertible, AddressConvertible {
     var coordinates: Coordinates! {
         return location?.coordinates
     }
-
+    
     var address: Address! {
         let info = [thoroughfare, subThoroughfare, locality, administrativeArea, postalCode]
         guard info.first(where: { $0 != nil }) != nil else { return nil }
@@ -175,7 +189,7 @@ extension Alarm: Codable {
         case coordinates = "location.coordinates"
         case address = "location.address"
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(services, forKey: .services)
@@ -185,7 +199,7 @@ extension Alarm: Codable {
             try container.encode(address, forKey: .address)
         } else { throw Exception() }
     }
-
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         services = try container.decode(Services.self, forKey: .services)
@@ -203,7 +217,7 @@ extension SafeTrekManager {
     public var isActive: Bool {
         return activeAlarm != nil
     }
-
+    
     private var activeAlarm: String! {
         get { return UserDefaults.standard.string(forKey: "activeAlarm") }
         set { UserDefaults.standard.set(newValue, forKey: "activeAlarm") }
@@ -214,15 +228,15 @@ extension SafeTrekManager {
     public func updateLocation(to newLocation: CoordinatesConvertible & AddressConvertible) {
         updateLocation(to: newLocation.coordinates ?? newLocation.address)
     }
-
+    
     public func updateLocation(to newLocation: CoordinatesConvertible) {
         updateLocation(to: newLocation.coordinates)
     }
-
+    
     public func updateLocation(to newLocation: AddressConvertible) {
         updateLocation(to: newLocation.address)
     }
-
+    
     public func updateLocation(to newLocation: CodableLocation) {
         guard isActive else { return }
         let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm!)/locations"
@@ -242,7 +256,7 @@ extension SafeTrekManager {
         }
         guard let url = URL(string: path)
             , let jsonData = data
-            else { fatalError("Failed to update") }
+            else { return showError("Failed to update.") }
         let request = makePostRequest(to: url, jsonData: jsonData)
         URLSession.shared.dataTask(with: request).resume()
     }
@@ -256,7 +270,7 @@ extension SafeTrekManager {
         activeAlarm = nil
         guard let url = URL(string: path)
             , let data = try? JSONEncoder().encode(dict)
-            else { fatalError("Failed to cancel") }
+            else { return showError("Failed to cancel.") }
         let request = makePostRequest(to: url, jsonData: data)
         URLSession.shared.dataTask(with: request).resume()
     }

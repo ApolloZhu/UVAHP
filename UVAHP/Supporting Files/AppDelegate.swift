@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SafeTrekManager.shared.login()
         }
         SafeTrekManager.shared.cancel()
+        UNUserNotificationCenter.current()
+            .requestAuthorization(options: [.alert, .badge, .sound])
+        { (authorized, _) in
+            print("Is authorized: \(authorized)")
+        }
         return true
     }
 
