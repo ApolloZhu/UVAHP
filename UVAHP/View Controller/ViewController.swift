@@ -12,6 +12,12 @@ import AVFoundation
 import CoreLocation
 import MapKit
 
+func ui(_ exec: @escaping () -> Void) {
+    DispatchQueue.main.async {
+        exec()
+    }
+}
+
 class DetailsView: UIView {
     
     lazy var detailsLabel: UILabel = {
@@ -52,7 +58,7 @@ class ViewController: UIViewController {
     lazy var session: AVCaptureSession = .init()
     var stillOutput = AVCaptureStillImageOutput()
     var borderLayer: CAShapeLayer?
-    let limit = 5
+    let limit = 25
     var count = 0
     var prev = -1
     var setCalls = Set<Int>()
@@ -100,8 +106,17 @@ class ViewController: UIViewController {
     }
     
     @IBOutlet weak var fireButton: UIButton!
+    var isFireSelected: Bool {
+        return fireButton.isSelected
+    }
     @IBOutlet weak var ambulanceButton: UIButton!
+    var isAmbulanceSelected: Bool {
+        return ambulanceButton.isSelected
+    }
     @IBOutlet weak var policeButton: UIButton!
+    var isPoliceSelected: Bool {
+        return policeButton.isSelected
+    }
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var mapView: MKMapView! {
         didSet {
@@ -221,6 +236,7 @@ extension ViewController: CLLocationManagerDelegate {
 
 var smiled = false
 
+
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
@@ -266,17 +282,16 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     if count >= limit {
                         // call function pass in current
                         print("Action")
-                        if current == 0{
+                        if current == 0 && isFireSelected { //righteye
                             print("FireButton")
-                            didTapFireButton()
+                            ui { self.didTapFireButton() }
                         }
-                        else if current == 1{
+                        else if current == 1 && isPoliceSelected { //lefteye
                             print("PoliceButton")
-                            didTapPoliceButton()
-                        }
-                        else if current == 2{
+                            ui { self.didTapPoliceButton() }
+                        } else if current == 2 && isAmbulanceSelected { //botheye
                             print("AmbulanceButton")
-                            didTapAmbulanceButton()
+                            ui { self.didTapAmbulanceButton() }
                         }
                         count = 0
                     }
