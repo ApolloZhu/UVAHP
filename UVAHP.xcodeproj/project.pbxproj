@@ -15,6 +15,7 @@
 		52D9B25E2066C65A00B4D609 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D9B25D2066C65A00B4D609 /* Extensions.swift */; };
 		52E7DC9C2067424400BFE2E7 /* FIPS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7DC9B2067424400BFE2E7 /* FIPS.swift */; };
 		52E7DCA02067477700BFE2E7 /* Offenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7DC9F2067477700BFE2E7 /* Offenses.swift */; };
+		52E7DCC7206784E700BFE2E7 /* CoreLocation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7DCC6206784E700BFE2E7 /* CoreLocation+Extensions.swift */; };
 		6AFBF2182066DB24003DB256 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AFBF2172066DB24003DB256 /* MapKit.framework */; };
 		6AFBF21B2066EC93003DB256 /* SafeTrekManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFBF21A2066EC91003DB256 /* SafeTrekManager.swift */; };
 		6AFBF245206772FE003DB256 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFBF244206772FE003DB256 /* IntentHandler.swift */; };
@@ -72,6 +73,7 @@
 		52E7DC9F2067477700BFE2E7 /* Offenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Offenses.swift; sourceTree = "<group>"; };
 		52E7DCA12067703100BFE2E7 /* UVAHP.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UVAHP.entitlements; sourceTree = "<group>"; };
 		52E7DCB0206770B800BFE2E7 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
+		52E7DCC6206784E700BFE2E7 /* CoreLocation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreLocation+Extensions.swift"; sourceTree = "<group>"; };
 		6AFBF2172066DB24003DB256 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		6AFBF21A2066EC91003DB256 /* SafeTrekManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafeTrekManager.swift; sourceTree = "<group>"; };
 		6AFBF242206772FE003DB256 /* siri.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = siri.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -199,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				6AFBF21A2066EC91003DB256 /* SafeTrekManager.swift */,
+				52E7DCC6206784E700BFE2E7 /* CoreLocation+Extensions.swift */,
 			);
 			path = SafeTrek;
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AFBF21B2066EC93003DB256 /* SafeTrekManager.swift in Sources */,
+				52E7DCC7206784E700BFE2E7 /* CoreLocation+Extensions.swift in Sources */,
 				52E7DC9C2067424400BFE2E7 /* FIPS.swift in Sources */,
 				52E7DCA02067477700BFE2E7 /* Offenses.swift in Sources */,
 				52D9B24B2066C4E600B4D609 /* ViewController.swift in Sources */,
