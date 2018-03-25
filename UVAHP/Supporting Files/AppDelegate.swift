@@ -8,6 +8,8 @@
 
 import UIKit
 import UserNotifications
+//import GooglePlaces
+import GoogleMaps
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         { (authorized, _) in
             print("Is authorized: \(authorized)")
         }
+        GMSServices.provideAPIKey("AIzaSyAJEW3JOLuQubXYyrkStoQvur2DvrQ8hjk")
         return true
     }
 

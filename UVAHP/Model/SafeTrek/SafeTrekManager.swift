@@ -54,6 +54,9 @@ extension SafeTrekManager {
 
 // MARK: - Trigger
 
+fileprivate var isPrompting = false
+fileprivate var isProcessing = false
+
 extension SafeTrekManager {
     public func triggerAlarm(services: Services, location: CoordinatesConvertible & AddressConvertible) {
         triggerAlarm(services: services,
@@ -69,8 +72,10 @@ extension SafeTrekManager {
     }
     
     public func triggerAlarm(services: Services, location: CodableLocation) {
-        print("Trigger")
+        guard !isProcessing else { return }
         guard !isActive else { return updateLocation(to: location) }
+        isProcessing = true
+        speak("Calling Services")
         let alarm = Alarm(services: services, location: location)
         guard let data = try? JSONEncoder().encode(alarm)
             , let url = URL(string: "https://api-sandbox.safetrek.io/v1/alarms")
@@ -81,7 +86,12 @@ extension SafeTrekManager {
             guard let data = data
                 , let extractor = try? JSONDecoder()
                     .decode(IDExtractor.self, from: data) else {
-                        return UIApplication.shared.open(URL(string: "telprompt:911")!)
+                        if isPrompting { return }
+                        isPrompting = true
+                        speak("Do you want to call nine one one instead?")
+                        UIApplication.shared.open(URL(string: "telprompt:911")!)
+                        { _ in isPrompting = false;isProcessing = false }
+                        return
             }
             self.activeAlarm = extractor.id
             let center = UNUserNotificationCenter.current()
@@ -97,6 +107,7 @@ extension SafeTrekManager {
                 identifier: "Submitted", content: content, trigger: nil
             )
             center.add(request, withCompletionHandler: nil)
+            isProcessing = false
         }
         task.resume()
     }
@@ -202,6 +213,7 @@ extension Notification.Name {
 
 extension SafeTrekManager {
     public func cancel() {
+        NotificationCenter.default.post(Notification(name: .safeTrekDidCancel))
         guard isActive else { return }
         let dict = ["status": "CANCELED"]
         let path = "https://api.safetrek.io/v1/alarms/\(activeAlarm!)/status"
@@ -211,6 +223,5 @@ extension SafeTrekManager {
             else { return showError("Failed to cancel.") }
         let request = makePostRequest(to: url, jsonData: data)
         URLSession.shared.dataTask(with: request).resume()
-        NotificationCenter.default.post(Notification(name: .safeTrekDidCancel))
     }
 }

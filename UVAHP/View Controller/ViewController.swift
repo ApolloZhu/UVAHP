@@ -10,82 +10,31 @@
 import UIKit
 import AVFoundation
 import CoreLocation
-import MapKit
-
-func ui(_ exec: @escaping () -> Void) {
-    DispatchQueue.main.async {
-        exec()
-    }
-}
-
-class DetailsView: UIView {
-    
-    lazy var detailsLabel: UILabel = {
-        let detailsLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height))
-        detailsLabel.numberOfLines = 0
-        detailsLabel.textColor = .white
-        detailsLabel.font = UIFont.systemFont(ofSize: 18.0)
-        detailsLabel.textAlignment = .left
-        
-        return detailsLabel
-    }()
-    
-    func setup() {
-        layer.borderColor = UIColor.red.withAlphaComponent(0.7).cgColor
-        layer.borderWidth = 5.0
-        
-        addSubview(detailsLabel)
-    }
-    
-    override var frame: CGRect {
-        didSet(newFrame) {
-            var detailsFrame = detailsLabel.frame
-            detailsFrame = CGRect(x: 0, y: newFrame.size.height, width: newFrame.size.width * 2.0, height: newFrame.size.height / 2.0)
-            detailsLabel.frame = detailsFrame
-        }
-    }
-}
-
+import GoogleMaps
+import UserNotifications
 
 class ViewController: UIViewController {
     lazy var locationManager: CLLocationManager = {
-        let locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        return locationManager
-    }()
+        $0.delegate = self
+        $0.desiredAccuracy = kCLLocationAccuracyBest
+        return $0
+    }(CLLocationManager())
     
     lazy var session: AVCaptureSession = .init()
-    var stillOutput = AVCaptureStillImageOutput()
-    var borderLayer: CAShapeLayer?
     let limit = 25
     var count = 0
     var prev = -1
-    var setCalls = Set<Int>()
-    
-    let detailsView: DetailsView = {
-        let detailsView = DetailsView()
-        detailsView.setup()
-        
-        return detailsView
-    }()
     
     lazy var previewLayer: AVCaptureVideoPreviewLayer? = {
-        var previewLay = AVCaptureVideoPreviewLayer(session: session)
-        previewLay.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        
-        return previewLay
-    }()
+        $0.videoGravity = .resizeAspectFill
+        return $0
+    }(AVCaptureVideoPreviewLayer(session: session))
     
-    lazy var frontCamera: AVCaptureDevice? = {
-        return AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInDuoCamera, .builtInMicrophone, .builtInTelephotoCamera, .builtInWideAngleCamera], mediaType: .video, position: .front).devices.first
-        // let devices = AVCaptureDevice.devices(for: .video)
-        // return devices.filter { $0.position == .front }.first!
-    }()
+    lazy var frontCamera: AVCaptureDevice? = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInDuoCamera, .builtInMicrophone, .builtInTelephotoCamera, .builtInWideAngleCamera], mediaType: .video, position: .front).devices.first
     
     let faceDetector = CIDetector(
         ofType: CIDetectorTypeFace, context: nil,
-        options: [CIDetectorAccuracy : CIDetectorAccuracyLow]
+        options: [CIDetectorAccuracy: CIDetectorAccuracyLow]
     )
     
     override func viewDidLayoutSubviews() {
@@ -93,77 +42,68 @@ class ViewController: UIViewController {
         previewLayer?.frame = view.frame
     }
     
-    //    override func viewDidAppear(_ animated: Bool) {
-    //        super.viewDidAppear(animated)
-    //        guard let previewLayer = previewLayer else { return }
-    //
-    //        view.layer.addSublayer(previewLayer)
-    //        view.addSubview(detailsView)
-    //        view.bringSubview(toFront: detailsView)
-    //    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        sessionPrepare()
+        prepareSession()
         session.startRunning()
-        requestAuthorization()
-        NotificationCenter.default.addObserver(self, selector: #selector(cancelUI),
-                                               name: .safeTrekDidCancel, object: nil)
+        requestLocationAccess()
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(cancelUI),
+            name: .safeTrekDidCancel, object: nil
+        )
     }
     
+    // MARK: - UI controls
     @IBOutlet weak var fireButton: UIButton!
     var isFireSelected: Bool {
-        return fireButton.isSelected
+        get { return fireButton.isSelected }
+        set { fireButton.isSelected = newValue }
     }
     @IBOutlet weak var ambulanceButton: UIButton!
     var isAmbulanceSelected: Bool {
-        return ambulanceButton.isSelected
+        get { return ambulanceButton.isSelected }
+        set { ambulanceButton.isSelected = newValue }
     }
     @IBOutlet weak var policeButton: UIButton!
     var isPoliceSelected: Bool {
-        return policeButton.isSelected
+        get { return policeButton.isSelected }
+        set { policeButton.isSelected = newValue }
     }
-    @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var mapView: MKMapView! {
+    @IBOutlet weak var submitButton: UIButton! {
         didSet {
-            mapView?.setUserTrackingMode(.follow, animated: true)
-            mapView?.showsUserLocation = true
+            submitButton?.setNeedsLayout()
+        }
+    }
+    @IBOutlet weak var mapView: GMSMapView! {
+        didSet {
+            requestLocationAccess()
+            startUpdate()
+            mapView.isMyLocationEnabled = true
         }
     }
     
+    // MARK: - Actions
     
     @IBAction func didTapFireButton() {
-        fireButton.isSelected = !fireButton.isSelected
-        if fireButton.isSelected {
-            ambulanceButton.isSelected = true
-            speak("Fire Department Selected")
-        }
-        else{
-            speak("Fire Department Not Selected")
+        isFireSelected.toggle()
+        if isFireSelected {
+            speak("Fire Department and Ambulance Selected")
+            isAmbulanceSelected = true
+        } else {
+            speak("Fire Department Deeselected")
         }
     }
     
     @IBAction func didTapAmbulanceButton() {
-        ambulanceButton.isSelected = !ambulanceButton.isSelected
-        if ambulanceButton.isSelected {
-            speak("Ambulance Selected")
-        }
-        else{
-            speak("Ambulance Not Selected")
-        }
+        isAmbulanceSelected.toggle()
+        speak("Ambulance " + (isAmbulanceSelected ? "Selected" : "Deeselected"))
     }
     
     @IBAction func didTapPoliceButton() {
-        policeButton.isSelected = !policeButton.isSelected
-        if policeButton.isSelected {
-            speak("Police Selected")
-        }
-        else{
-            speak("Police Not Selected")
-        }
-        
+        isPoliceSelected.toggle()
+        speak("Police " + (isPoliceSelected ? "Selected" : "Deeselected"))
     }
-
+    
     var services: Services {
         return Services(
             police: isPoliceSelected,
@@ -175,9 +115,7 @@ class ViewController: UIViewController {
     @IBAction func submit() {
         if submitButton.currentTitle == "Submit" {
             smiled = true
-//            print("Smile-Submit")
             submitButton.setTitle("Cancel", for: .normal)
-//            print("Smile-Set title to cancel")
             startUpdate()
             if let loc = locationManager.location {
                 SafeTrekManager.shared.triggerAlarm(
@@ -186,16 +124,17 @@ class ViewController: UIViewController {
             }
         } else { cancel() }
     }
-
+    
     private func cancel() {
         SafeTrekManager.shared.cancel()
     }
-
+    
     @objc private func cancelUI() {
-        print("Smile-Cancel")
         stopUpdate()
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         submitButton.setTitle("Submit", for: .normal)
         smiled = false
+        speak("")
     }
     
     func stopUpdate() {
@@ -212,12 +151,13 @@ class ViewController: UIViewController {
 let queue = DispatchQueue(label: "output.queue")
 
 extension ViewController: CLLocationManagerDelegate {
-    func sessionPrepare() {
-        guard let captureDevice = frontCamera else { return }
+    func prepareSession() {
+        guard let captureDevice = frontCamera
+            , let deviceInput = try? AVCaptureDeviceInput(device: captureDevice)
+            else { return }
         
-        session.sessionPreset = AVCaptureSession.Preset.photo
+        session.sessionPreset = .photo
         
-        let deviceInput = try! AVCaptureDeviceInput(device: captureDevice)
         session.beginConfiguration()
         
         if session.canAddInput(deviceInput) {
@@ -225,7 +165,8 @@ extension ViewController: CLLocationManagerDelegate {
         }
         
         let output = AVCaptureVideoDataOutput()
-        output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String : NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+        output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String
+            : NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
         
         output.alwaysDiscardsLateVideoFrames = true
         
@@ -236,7 +177,6 @@ extension ViewController: CLLocationManagerDelegate {
         }
         
         session.commitConfiguration()
-        
     }
     
     
@@ -250,7 +190,7 @@ extension ViewController: CLLocationManagerDelegate {
     }
     
     
-    func requestAuthorization() {
+    func requestLocationAccess() {
         locationManager.requestAlwaysAuthorization()
     }
     
@@ -260,19 +200,28 @@ extension ViewController: CLLocationManagerDelegate {
     
     func startUpdate() {
         if CLLocationManager.locationServicesEnabled()
-        && CLLocationManager.authorizationStatus() == .authorized {
+            && (CLLocationManager.authorizationStatus() == .authorizedAlways
+                || CLLocationManager.authorizationStatus() == .authorizedWhenInUse)
+        {
             locationManager.startUpdatingLocation()
         } else {
-            requestAuthorization()
+            requestLocationAccess()
         }
     }
     
+    
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation = locations[0]
+        let coord = userLocation.coordinate
+        let zoom = autoZoomed ? mapView.camera.zoom : 15
+        autoZoomed = false
+        mapView.camera = GMSCameraPosition.camera(withTarget: coord, zoom: zoom)
         if SafeTrekManager.shared.isActive {
             SafeTrekManager.shared.updateLocation(to: userLocation)
         } else {
             ui {
+                guard self.submitButton.currentTitle == "Cancel" else { return }
                 SafeTrekManager.shared.triggerAlarm(
                     services: self.services,
                     location: userLocation
@@ -282,57 +231,43 @@ extension ViewController: CLLocationManagerDelegate {
     }
 }
 
+var autoZoomed = false
 var smiled = false
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput,
                        didOutput sampleBuffer: CMSampleBuffer,
                        from connection: AVCaptureConnection) {
-        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        guard let buffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate)
-        let ciImage = CIImage(cvImageBuffer: pixelBuffer!, options: attachments as? [String : Any])
+        let ciImage = CIImage(cvImageBuffer: buffer, options: attachments as? [String : Any])
         let options: [String : Any] = [
-            CIDetectorImageOrientation: exifOrientation(orientation: UIDevice.current.orientation),
+            CIDetectorImageOrientation: UIDevice.current.orientation.exif,
             CIDetectorSmile: true,
             CIDetectorEyeBlink: true
         ]
         let allFeatures = faceDetector?.features(in: ciImage, options: options)
         
-        let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer)
-        let cleanAperture = CMVideoFormatDescriptionGetCleanAperture(formatDescription!, false)
-        
         guard let features = allFeatures else { return }
         
         for feature in features {
             if let faceFeature = feature as? CIFaceFeature {
-                let faceRect = calculateFaceRect(facePosition: faceFeature.rightEyePosition, faceBounds: faceFeature.bounds, clearAperture: cleanAperture)
-                let featureDetails = ["has smile: \(faceFeature.hasSmile)",
-                    "has closed left eye: \(faceFeature.leftEyeClosed)",
-                    "has closed right eye: \(faceFeature.rightEyeClosed)"]
-                update(with: faceRect, text: featureDetails.joined(separator: "\n"))
                 let current = outputSignals(face :faceFeature)
-                print("Count:", count)
                 if faceFeature.hasSmile && smiled == false {
-//                    print("Smile")
+                    speak("Smiled")
                     ui { self.submit() }
                 }
                 if prev != current {
                     count = 0
-//                    print("Inaction")
                 } else if prev == current && prev != -1 {
                     if count >= limit {
                         // call function pass in current
                         ui {
-//                            print("Action")
                             if current == 0 && self.isFireSelected { //lefteye <- based on user eye
-//                                print("FireButton")
                                 self.didTapFireButton()
-                            }
-                            else if current == 1 && self.isPoliceSelected { //righteye <- based on user eye
-//                                print("PoliceButton")
+                            } else if current == 1 && self.isPoliceSelected { //righteye <- based on user eye
                                 self.didTapPoliceButton()
                             } else if current == 2 && self.isAmbulanceSelected { //botheye
-//                                print("AmbulanceButton")
                                 self.didTapAmbulanceButton()
                             }
                             self.count = 0
@@ -343,36 +278,25 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 prev = current
             }
         }
-        
-        if features.count == 0 {
-            DispatchQueue.main.async {
-                self.detailsView.alpha = 0.0
-            }
+    }
+    
+    //Everything based on ImageFeatures
+    func outputSignals(face: CIFaceFeature) -> Int {
+        switch (face.leftEyeClosed, face.rightEyeClosed) {
+        case (true, true): return 2 // Ambulance
+        case (true, _): return 1 // Police
+        case (_, true): return 0
+        default: return -1
         }
     }
     
-    func outputSignals(face: CIFaceFeature) -> Int{
-        //Everything based on ImageFeatures
-        //Ambulance
-        if face.rightEyeClosed && face.leftEyeClosed{
-//            print("Both")
-            return 2
-        }
-            //Police
-        else if face.leftEyeClosed{
-//            print("Left")
-            return 1
-        }
-            //Fire
-        else if face.rightEyeClosed{
-//            print("Right")
-            return 0
-        }
-        return -1
-    }
     
-    func exifOrientation(orientation: UIDeviceOrientation) -> Int {
-        switch orientation {
+    
+}
+
+extension UIDeviceOrientation {
+    var exif: Int {
+        switch self {
         case .portraitUpsideDown:
             return 8
         case .landscapeLeft:
@@ -381,71 +305,6 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             return 1
         default:
             return 6
-        }
-    }
-    
-    func videoBox(frameSize: CGSize, apertureSize: CGSize) -> CGRect {
-        let apertureRatio = apertureSize.height / apertureSize.width
-        let viewRatio = frameSize.width / frameSize.height
-        
-        var size = CGSize.zero
-        
-        if (viewRatio > apertureRatio) {
-            size.width = frameSize.width
-            size.height = apertureSize.width * (frameSize.width / apertureSize.height)
-        } else {
-            size.width = apertureSize.height * (frameSize.height / apertureSize.width)
-            size.height = frameSize.height
-        }
-        
-        var videoBox = CGRect(origin: .zero, size: size)
-        
-        if (size.width < frameSize.width) {
-            videoBox.origin.x = (frameSize.width - size.width) / 2.0
-        } else {
-            videoBox.origin.x = (size.width - frameSize.width) / 2.0
-        }
-        
-        if (size.height < frameSize.height) {
-            videoBox.origin.y = (frameSize.height - size.height) / 2.0
-        } else {
-            videoBox.origin.y = (size.height - frameSize.height) / 2.0
-        }
-        return videoBox
-    }
-    
-    func calculateFaceRect(facePosition: CGPoint, faceBounds: CGRect, clearAperture: CGRect) -> CGRect {
-        let parentFrameSize = previewLayer!.frame.size
-        let previewBox = videoBox(frameSize: parentFrameSize, apertureSize: clearAperture.size)
-        
-        var faceRect = faceBounds
-        
-        swap(&faceRect.size.width, &faceRect.size.height)
-        swap(&faceRect.origin.x, &faceRect.origin.y)
-        
-        let widthScaleBy = previewBox.size.width / clearAperture.size.height
-        let heightScaleBy = previewBox.size.height / clearAperture.size.width
-        
-        faceRect.size.width *= widthScaleBy
-        faceRect.size.height *= heightScaleBy
-        faceRect.origin.x *= widthScaleBy
-        faceRect.origin.y *= heightScaleBy
-        
-        faceRect = faceRect.offsetBy(dx: 0.0, dy: previewBox.origin.y)
-        let frame = CGRect(x: parentFrameSize.width - faceRect.origin.x - faceRect.size.width / 2.0 - previewBox.origin.x / 2.0, y: faceRect.origin.y, width: faceRect.width, height: faceRect.height)
-        
-        return frame
-    }
-}
-
-extension ViewController {
-    func update(with faceRect: CGRect, text: String) {
-        ui {
-            UIView.animate(withDuration: 0.2) {
-                self.detailsView.detailsLabel.text = text
-                self.detailsView.alpha = 1.0
-                self.detailsView.frame = faceRect
-            }
         }
     }
 }

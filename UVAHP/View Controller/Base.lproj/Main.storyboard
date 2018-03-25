@@ -20,41 +20,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="6dD-v7-JyZ">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="APq-vH-8Wj" customClass="GMSMapView">
                                 <rect key="frame" x="0.0" y="116" width="375" height="217.5"/>
-                            </mapView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wch-JR-BkU">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wch-JR-BkU">
                                 <rect key="frame" x="0.0" y="341.5" width="375" height="309.5"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="8fz-Eo-r9C">
-                                        <rect key="frame" x="19.5" y="0.0" width="336" height="151"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8fz-Eo-r9C">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="151"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="characterWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YCN-b7-AeK">
-                                                <rect key="frame" x="0.0" y="0.0" width="112" height="151"/>
-                                                <state key="normal">
-                                                    <attributedString key="attributedTitle">
-                                                        <fragment>
-                                                            <string key="content">Police
-</string>
-                                                            <attributes>
-                                                                <font key="NSFont" size="15" name=".AppleSystemUIFont"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                        <fragment content="(Close Right Eye)">
-                                                            <attributes>
-                                                                <font key="NSFont" size="10" name=".AppleSystemUIFont"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                </state>
-                                                <connections>
-                                                    <action selector="didTapPoliceButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="nAN-i1-xoq"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="characterWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WVB-fp-Rnp">
-                                                <rect key="frame" x="112" y="0.0" width="112" height="151"/>
+                                                <rect key="frame" x="0.0" y="54.5" width="141" height="42"/>
                                                 <state key="normal">
                                                     <attributedString key="attributedTitle">
                                                         <fragment>
@@ -78,7 +55,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="characterWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DQV-Z6-jUb">
-                                                <rect key="frame" x="224" y="0.0" width="112" height="151"/>
+                                                <rect key="frame" x="149" y="54.5" width="108" height="42"/>
                                                 <state key="normal">
                                                     <attributedString key="attributedTitle">
                                                         <fragment>
@@ -101,32 +78,62 @@
                                                     <action selector="didTapAmbulanceButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="PJV-L9-db7"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="characterWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YCN-b7-AeK">
+                                                <rect key="frame" x="265" y="54.5" width="110" height="42"/>
+                                                <state key="normal">
+                                                    <attributedString key="attributedTitle">
+                                                        <fragment>
+                                                            <string key="content">Police
+</string>
+                                                            <attributes>
+                                                                <font key="NSFont" size="15" name=".AppleSystemUIFont"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content="(Close Right Eye)">
+                                                            <attributes>
+                                                                <font key="NSFont" size="10" name=".AppleSystemUIFont"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                </state>
+                                                <connections>
+                                                    <action selector="didTapPoliceButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="nAN-i1-xoq"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7nW-vu-C1f">
-                                        <rect key="frame" x="36.5" y="159" width="302" height="150.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="2:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <state key="normal" title="Submit"/>
-                                        <connections>
-                                            <action selector="submit" destination="BYZ-38-t0r" eventType="touchUpInside" id="hpK-8y-ufa"/>
-                                        </connections>
-                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KrY-MJ-lhc">
+                                        <rect key="frame" x="0.0" y="159" width="375" height="150.5"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7nW-vu-C1f" customClass="RoundedButton" customModule="UVAHP" customModuleProvider="target">
+                                                <rect key="frame" x="112" y="0.0" width="151" height="150.5"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="7nW-vu-C1f" secondAttribute="height" multiplier="1:1" id="UI1-z5-Mxq" userLabel="aspect = 2:4"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Submit"/>
+                                                <connections>
+                                                    <action selector="submit" destination="BYZ-38-t0r" eventType="touchUpInside" id="hpK-8y-ufa"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="wch-JR-BkU" secondAttribute="trailing" id="33K-EH-6HB"/>
+                            <constraint firstItem="APq-vH-8Wj" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="4pi-Ds-oSi"/>
+                            <constraint firstItem="wch-JR-BkU" firstAttribute="top" secondItem="APq-vH-8Wj" secondAttribute="bottom" constant="8" symbolic="YES" id="5J8-xp-N1h"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="APq-vH-8Wj" secondAttribute="trailing" id="8jk-2p-y0S"/>
                             <constraint firstItem="wch-JR-BkU" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-16" id="Da7-Tp-JnU"/>
-                            <constraint firstItem="6dD-v7-JyZ" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="L92-Mx-hqM"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="6dD-v7-JyZ" secondAttribute="top" id="Ta0-bR-1Aw"/>
-                            <constraint firstItem="6dD-v7-JyZ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ZAf-Vs-2FY"/>
-                            <constraint firstItem="wch-JR-BkU" firstAttribute="top" secondItem="6dD-v7-JyZ" secondAttribute="bottom" constant="8" symbolic="YES" id="nhV-9L-o2t"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="leading" secondItem="APq-vH-8Wj" secondAttribute="leading" id="MGK-ew-jmU"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="APq-vH-8Wj" secondAttribute="top" id="TJZ-c9-Nlm"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="leading" secondItem="wch-JR-BkU" secondAttribute="leading" id="pg6-oY-les"/>
-                            <constraint firstItem="6dD-v7-JyZ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="soi-yp-slO"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -134,7 +141,7 @@
                     <connections>
                         <outlet property="ambulanceButton" destination="DQV-Z6-jUb" id="ryr-IU-Y51"/>
                         <outlet property="fireButton" destination="WVB-fp-Rnp" id="Hn1-hN-lkW"/>
-                        <outlet property="mapView" destination="6dD-v7-JyZ" id="nRO-6b-8iT"/>
+                        <outlet property="mapView" destination="APq-vH-8Wj" id="XKz-e1-VYn"/>
                         <outlet property="policeButton" destination="YCN-b7-AeK" id="pVf-Rh-Par"/>
                         <outlet property="submitButton" destination="7nW-vu-C1f" id="00D-O5-sPG"/>
                     </connections>

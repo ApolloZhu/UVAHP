@@ -1,82 +1,20 @@
 PODS:
-  - AWSAutoScaling (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSCloudWatch (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSCognito (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSCognitoIdentityProvider (2.6.13):
-    - AWSCognitoIdentityProviderASF (= 1.0.1)
-    - AWSCore (= 2.6.13)
-  - AWSCognitoIdentityProviderASF (1.0.1)
-  - AWSCore (2.6.13)
-  - AWSDynamoDB (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSEC2 (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSElasticLoadBalancing (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSIoT (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSKinesis (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSLambda (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSMachineLearning (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSMobileAnalytics (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSS3 (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSSES (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSSimpleDB (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSSNS (2.6.13):
-    - AWSCore (= 2.6.13)
-  - AWSSQS (2.6.13):
-    - AWSCore (= 2.6.13)
+  - GoogleMaps (2.6.0):
+    - GoogleMaps/Maps (= 2.6.0)
+  - GoogleMaps/Base (2.6.0)
+  - GoogleMaps/Maps (2.6.0):
+    - GoogleMaps/Base
+  - GooglePlaces (2.6.0):
+    - GoogleMaps/Base (= 2.6.0)
 
 DEPENDENCIES:
-  - AWSAutoScaling
-  - AWSCloudWatch
-  - AWSCognito
-  - AWSCognitoIdentityProvider
-  - AWSDynamoDB
-  - AWSEC2
-  - AWSElasticLoadBalancing
-  - AWSIoT
-  - AWSKinesis
-  - AWSLambda
-  - AWSMachineLearning
-  - AWSMobileAnalytics
-  - AWSS3
-  - AWSSES
-  - AWSSimpleDB
-  - AWSSNS
-  - AWSSQS
+  - GoogleMaps
+  - GooglePlaces
 
 SPEC CHECKSUMS:
-  AWSAutoScaling: 2c7370b1719cfc1c91ed70dc424ea9498d82823b
-  AWSCloudWatch: 64daef9b0c7430630e7f90ae6185ebc6cf7f4eae
-  AWSCognito: 26f1263726ddc4c16b2a9876402b4bc5c25199b7
-  AWSCognitoIdentityProvider: c532434167c99ec42126447a83c6a2f2ea18f678
-  AWSCognitoIdentityProviderASF: f94f1a502e72ef3d0a1de93e10bf7a79c8698118
-  AWSCore: 5da797bc476188fdaf00dec134fa18d84708eca9
-  AWSDynamoDB: 36abff7ce93fcadad2c4dc6f729d8716c933adf2
-  AWSEC2: a4609be6fd194f0468bb07f18e51e66473cfd4ac
-  AWSElasticLoadBalancing: ca176d26da1217ea3b873a7f6adc31ccbe37e8aa
-  AWSIoT: e670422b7e1704c4de03a645651ad4b32bea219a
-  AWSKinesis: 876eab71dbebd4c5dbe2d059671b85decc95878c
-  AWSLambda: 24e1a8803bd38810752dd975613e39d85577d3ae
-  AWSMachineLearning: 2d1d2bd245927b66dbc077d25f57e0989d449af2
-  AWSMobileAnalytics: fabc91afb08e8bd4952949834e21301af529f1dd
-  AWSS3: 7c178c82c2e648559b7075a663335055327dd4f5
-  AWSSES: e0d7bb3c4b2cde7af318aca147422c903582bffa
-  AWSSimpleDB: 69b560ecf6ec01a2352399254fc9a90a4f5f16c1
-  AWSSNS: 7d31d84d5b6d92b165c056d100732cfbe8c4fb45
-  AWSSQS: 3b8372e089be1d7ba3a1b6ab6cb3cb42f03af8b5
+  GoogleMaps: 42f91c68b7fa2f84d5c86597b18ceb99f5414c7f
+  GooglePlaces: f6ddf33b75cef69e888907d9947c57198ed845f3
 
-PODFILE CHECKSUM: ffd8d1ddc23d8ad77f2871293a5c916d207ed5d4
+PODFILE CHECKSUM: 0f7f76f7a6877f9d503832955b97d82a13a5fbc5
 
 COCOAPODS: 1.4.0
