@@ -298,8 +298,11 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let current = outputSignals(face :faceFeature)
                 if faceFeature.hasSmile && smiled == false {
                     smilecount += 1
-                    if smilecount >= limit && submitButton.isEnabled {
-                        startCountDown()
+                    ui {
+                        if self.smilecount >= self.limit
+                            && self.submitButton.isEnabled {
+                            self.startCountDown()
+                        }
                     }
                 }
                 if prev != current {
